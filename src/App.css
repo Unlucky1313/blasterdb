@@ -29,6 +29,13 @@ body {
   width: 100%;
 }
 
+.link{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .profile {
   float: right;
   align-self: center;
@@ -46,15 +53,17 @@ body {
       250px,
       2fr
     ) [heroEnd] 50px [sidebar] minmax(250px, 1fr) [sidebarEnd] 50px [end];
-  grid-template-rows: [row1-start] 95% [row1-end] 100px [third-line] auto [last-line];
+  grid-template-rows: [main] auto [second] 100px [third] 100px;
 }
 
 .imagesMain {
   display: flex;
   grid-column-start: imageSelect;
   grid-column-end: heroMargin;
+  grid-row-start: 1;
+  grid-row-end: 2;
   width: 100%;
-  max-height: 619px;
+  max-height: 595px;
   justify-self: center;
   justify-content: flex-start;
   flex-direction: column;
@@ -91,8 +100,6 @@ body {
   display: flex;
   grid-column-start: hero;
   grid-column-end: heroEnd;
-  grid-row-start: row1-start;
-  grid-row-end: row1-end;
   width: 100%;
   justify-self: center;
   align-items: center;
@@ -103,13 +110,12 @@ body {
 .sidebar {
   grid-column-start: sidebar;
   grid-column-end: sidebarEnd;
-  grid-row-start: row1-start;
-  grid-row-end: 4;
   width: 100%;
   color: white;
+  height: auto;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 900px) {
   .main {
     display: block;
     grid-template-columns: 1fr;
@@ -118,21 +124,18 @@ body {
 
   .sidebar {
     grid-column-start: 1;
-    grid-row-start: 3;
     margin: 10px;
     width: auto;
   }
 
   .imgCard {
     grid-column-start: 1;
-    grid-row-start: 1;
     margin: 10px;
     width: auto;
   }
 
   .imagesMain {
     grid-column-start: 1;
-    grid-row-start: 2;
     margin: 10px;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -159,6 +162,15 @@ button {
 .title {
   align-self: center;
   margin: 10px;
+}
+
+.description{
+  display: flex;
+  grid-column-start: imageSelect;
+  grid-column-end: heroEnd;
+  width: 100%;
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 
 @keyframes App-logo-spin {
