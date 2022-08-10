@@ -53,7 +53,7 @@ body {
       250px,
       2fr
     ) [heroEnd] 50px [sidebar] minmax(250px, 1fr) [sidebarEnd] 50px [end];
-  grid-template-rows: [main] auto [second] 100px [third] 100px;
+  grid-template-rows: [main] auto [second] 100px [third] auto;
 }
 
 .imagesMain {
@@ -63,7 +63,7 @@ body {
   grid-row-start: 1;
   grid-row-end: 2;
   width: 100%;
-  max-height: 595px;
+  max-height: 600px;
   justify-self: center;
   justify-content: flex-start;
   flex-direction: column;
@@ -113,6 +113,7 @@ body {
   width: 100%;
   color: white;
   height: auto;
+  grid-row: 1;
 }
 
 @media only screen and (max-width: 900px) {
@@ -166,10 +167,11 @@ button {
 
 .description{
   display: flex;
+  flex-direction: column;
   grid-column-start: imageSelect;
   grid-column-end: heroEnd;
   width: 100%;
-  grid-row-start: 2;
+  grid-row-start: 3;
   grid-row-end: 3;
 }
 

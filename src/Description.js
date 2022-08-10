@@ -5,7 +5,9 @@ export default function Description(props) {
   return (
     <>
       <Card className="description">
-
+        <h2>Description:</h2>
+        <br/>
+        <p>{props.descText}</p>
       </Card>
     </>
   );

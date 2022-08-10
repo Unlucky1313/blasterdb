@@ -2,6 +2,7 @@ import "./App.css";
 import Card from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
 import List from "@mui/material/List";
+import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -88,16 +89,16 @@ function BlasterLinks(props) {
           <Avatar>
             <RedeemIcon />
           </Avatar>
-          <p style={{ textAlign: "center", fontWeight: "bold" }}>Store</p>
+          <Button variant="contained" style={{ textAlign: "center", fontWeight: "bold" }}>Store</Button>
         </a>
       )}
 
       {props.kit && (
         <a className="link" href={props.kit}>
-          <Avatar>
+          <Avatar >
             <HomeRepairServiceIcon />
           </Avatar>
-          <p style={{ textAlign: "center", fontWeight: "bold" }}>Kit</p>
+          <Button variant="contained" style={{ textAlign: "center", fontWeight: "bold" }}>Kit</Button>
         </a>
       )}
 
@@ -106,7 +107,7 @@ function BlasterLinks(props) {
           <Avatar>
             <InsertDriveFileIcon />
           </Avatar>
-          <p style={{ textAlign: "center", fontWeight: "bold" }}>Files</p>
+          <Button variant="contained" style={{ textAlign: "center", fontWeight: "bold" }}>Files</Button>
         </a>
       )}
     </div>
