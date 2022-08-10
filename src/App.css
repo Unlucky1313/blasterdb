@@ -1,0 +1,171 @@
+.App {
+  text-align: center;
+}
+
+:root {
+  --main-primary: #2464ad;
+  --main-secondary: #e2f0ff;
+}
+
+body {
+  background-color: var(--main-primary);
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.links {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  width: 100%;
+}
+
+.profile {
+  float: right;
+  align-self: center;
+  display: flex;
+}
+
+.MuiAvatar-root {
+  margin: 9px;
+}
+
+.main {
+  display: grid;
+  margin-top: 50px;
+  grid-template-columns: [first] 40px [imageSelect] 150px [heroMargin] 30px [hero] minmax(
+      250px,
+      2fr
+    ) [heroEnd] 50px [sidebar] minmax(250px, 1fr) [sidebarEnd] 50px [end];
+  grid-template-rows: [row1-start] 95% [row1-end] 100px [third-line] auto [last-line];
+}
+
+.imagesMain {
+  display: flex;
+  grid-column-start: imageSelect;
+  grid-column-end: heroMargin;
+  width: 100%;
+  max-height: 619px;
+  justify-self: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.imageSmall {
+  width: 90%;
+  padding: 5%;
+}
+
+.coolScroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.coolScroll::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+.coolScroll::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px var(--main-primary);
+}
+
+.heroImg {
+  width: calc(100% - ((9 / 16) * 10%));
+  height: 90%;
+  justify-self: center;
+  align-self: center;
+  border-radius: 25px;
+  object-fit: cover;
+}
+
+.imgCard {
+  display: flex;
+  grid-column-start: hero;
+  grid-column-end: heroEnd;
+  grid-row-start: row1-start;
+  grid-row-end: row1-end;
+  width: 100%;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16/9;
+}
+
+.sidebar {
+  grid-column-start: sidebar;
+  grid-column-end: sidebarEnd;
+  grid-row-start: row1-start;
+  grid-row-end: 4;
+  width: 100%;
+  color: white;
+}
+
+@media only screen and (max-width: 768px) {
+  .main {
+    display: block;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(450px, 1fr) minmax(150px, 1fr) 3fr;
+  }
+
+  .sidebar {
+    grid-column-start: 1;
+    grid-row-start: 3;
+    margin: 10px;
+    width: auto;
+  }
+
+  .imgCard {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    margin: 10px;
+    width: auto;
+  }
+
+  .imagesMain {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    margin: 10px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100px;
+    width: auto;
+  }
+  .flexList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: auto;
+    overflow-y: hidden;
+  }
+  .imageSmall {
+    width: 150px;
+    padding: 5%;
+  }
+}
+
+button {
+  align-self: center;
+}
+
+.title {
+  align-self: center;
+  margin: 10px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
