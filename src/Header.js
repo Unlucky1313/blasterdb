@@ -5,6 +5,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { NavLink } from "react-router-dom";
+import { setDoc } from "firebase/firestore";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -17,29 +18,43 @@ firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_messagingSenderId,
   appId: process.env.REACT_APP_appId,
   measurementId: process.env.REACT_APP_measurementId,
-
 });
 
 const auth = firebase.auth();
 
-
-
-function Navigation() {
+export default function Header(props) {
   const [user] = useAuthState(auth);
+
+  function handleUser(value) {
+    props.onChange(value);
+  }
 
   return (
     <header className="App-header">
-    <section className="title">BlasterDB</section>
-    <section className="profile">
-      {user ? <Profile /> : <SignIn />}
-    </section>
-  </header>
+      <NavLink className="title" to="/">
+        BlasterDB
+      </NavLink>
+
+      <div className="sideHead">
+        <NavLink className="navLink" to="/blaster">
+          Blaster
+        </NavLink>
+        <section className="profile">
+          {user ? (
+            <>
+              <Profile />
+              <CheckForUser onChange={handleUser} />
+            </>
+          ) : (
+            <SignIn />
+          )}
+        </section>
+      </div>
+    </header>
   );
 }
 
-export default Navigation;
-
-function SignIn() {
+function SignIn(props) {
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
@@ -54,7 +69,6 @@ function SignIn() {
 
 function Profile() {
   const { photoURL } = auth.currentUser;
-
   return (
     auth.currentUser && (
       <>
@@ -77,4 +91,26 @@ function Profile() {
       </>
     )
   );
+}
+
+function CheckForUser(props) {
+  const { uid } = auth.currentUser;
+
+  const db = firebase.firestore();
+  var docRef = db.collection("users").doc(uid);
+
+  docRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        props.onChange(uid);
+      } else {
+        // doc.data() will be undefined in this case
+        props.onChange(uid);
+        setDoc(docRef, { collected: [], wishlist: [] });
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
 }

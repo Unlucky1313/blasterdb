@@ -17,7 +17,7 @@ body {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -72,6 +72,8 @@ body {
 .imageSmall {
   width: 90%;
   padding: 5%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
 }
 
 .coolScroll::-webkit-scrollbar {
@@ -80,11 +82,23 @@ body {
 }
 .coolScroll::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
 }
 .coolScroll::-webkit-scrollbar-thumb {
   border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px var(--main-primary);
+  box-shadow: inset 0 0 6px var(--main-primary);
+}
+
+.blasterCardWrapper {
+  display: flex;
+  flex-direction: column;
+  grid-column-start: hero;
+  grid-column-end: heroEnd;
+  width: 400px;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 .heroImg {
@@ -163,6 +177,7 @@ button {
 .title {
   align-self: center;
   margin: 10px;
+  color: white;
 }
 
 .description{
@@ -182,4 +197,15 @@ button {
   to {
     transform: rotate(360deg);
   }
+}
+
+.sideHead{
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.navLink{
+  padding:20px;
+  color: white;
 }

@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-import caliburnIcon from "./img/caliburnIcon.png";
-import { doc, getDoc } from "firebase/firestore";
-
-import ImageSelector from './ImageSelector.js'
-import HeroImg from './HeroImg.js'
-import Sidebar from './Sidebar.js'
-import Description from "./Description.js";
 import Header from "./Header.js";
 import BlasterPage from "./BlasterPage.js";
+import Home from "./Home.js";
 
-import { BrowserRouter as Router, Routes, Route}
-    from 'react-router-dom';
-
-console.log(process.env.REACT_APP_apiKey)
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_apiKey,
@@ -27,29 +18,27 @@ firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_messagingSenderId,
   appId: process.env.REACT_APP_appId,
   measurementId: process.env.REACT_APP_measurementId,
-
 });
 
-
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: "dark",
-//   },
-// });
-
 function App() {
+  const [user, setUser] = useState([]);
+
+  function gotUser(userVal) {
+    setUser(userVal);
+  }
+
   return (
-      <Router>
-      <Header />
+    <Router>
+      <Header onChange={gotUser} />
       <Routes>
-          {/* <Route exact path='/' exact element={<Home />} /> */}
-          <Route path='/blaster' element={<BlasterPage/>} />
-          {/* <Route path='/contact' element={<Contact/>} />
+        <Route path="/" element={<Home user={user} />} />
+        <Route path="/blaster" element={<BlasterPage />} />
+        {/* <Route path='/contact' element={<Contact/>} />
           <Route path='/blogs' element={<Blogs/>} />
           <Route path='/sign-up' element={<SignUp/>} /> */}
       </Routes>
-      </Router>
+    </Router>
   );
-  }
+}
 
 export default App;

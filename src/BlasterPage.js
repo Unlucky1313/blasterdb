@@ -11,9 +11,9 @@ import ImageSelector from './ImageSelector.js'
 import HeroImg from './HeroImg.js'
 import Sidebar from './Sidebar.js'
 import Description from "./Description";
-import Header from "./Header.js";
 
-console.log(process.env.REACT_APP_apiKey)
+import { useSearchParams } from "react-router-dom";
+
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_apiKey,
@@ -37,13 +37,15 @@ function BlasterPage() {
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
   const [blasterData, setBlasterData] = useState([]);
 
-  const blaster = "D0i9KOyqL8fnCFKbcXcq";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const blaster = searchParams.get("blaster")
+  console.log(blaster)
 
   useEffect(() => {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
-      setBlasterData({ ...docSnap.data() });
+      setBlasterData({ ...docSnap.data()});
       setBlasterHero(docSnap.data().imageArray[0])
     };
     getData();
@@ -52,6 +54,10 @@ function BlasterPage() {
   function handleChange(newValue) {
     setBlasterHero(newValue);
   }
+
+  
+
+  
 
   return (
     <div className="App">
