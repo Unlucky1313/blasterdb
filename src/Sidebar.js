@@ -10,6 +10,7 @@ import Divider from "@mui/material/Divider";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import RedeemIcon from "@mui/icons-material/Redeem";
+import BlasterActions from"./BlasterActions"
 
 import fps from "./img/FPS.png";
 import btype from "./img/btype.png";
@@ -75,6 +76,9 @@ export default function Sidebar(props) {
             kit={props.blasterData.kit}
             files={props.blasterData.files}
           />
+        </ListItem>
+        <ListItem style={{ marginTop: "30px"}}>
+          <BlasterActions blasterData = {props.blasterData} />
         </ListItem>
       </List>
     </Card>

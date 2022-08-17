@@ -24,15 +24,17 @@ firebase.initializeApp({
 // });
 
 export default function Home(props) {
-  const blaster = "D0i9KOyqL8fnCFKbcXcq";
 
 
 
   return (
 
-    <div className="App">
-      <BlasterCard user = {props.user} blaster = {blaster} />
+    <div className="cardHolder">
+      <BlasterCard user = {props.user} blaster = {"D0i9KOyqL8fnCFKbcXcq"} />
       <BlasterCard user = {props.user} blaster = {"nbPw3IRskYq08w4sxU44"} />
+      <BlasterCard user = {props.user} blaster = {"5GiHVMHTlcFp6MEbt9EQ"} />
+      <BlasterCard user = {props.user} blaster = {"J9k2v2vm3gSTpHYyFFzt"} />
+      <BlasterCard user = {props.user} blaster = {"BCV9lIU2Tk00377fH0A7"} />
     </div>
   );
 }

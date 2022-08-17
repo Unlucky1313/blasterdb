@@ -33,23 +33,23 @@ firebase.initializeApp({
 //   },
 // });
 
-function BlasterPage() {
+function BlasterPage(props) {
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
   const [blasterData, setBlasterData] = useState([]);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const blaster = searchParams.get("blaster")
+   const [searchParams] = useSearchParams();
+   const blaster = searchParams.get("blaster")
   console.log(blaster)
 
   useEffect(() => {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
-      setBlasterData({ ...docSnap.data()});
+      setBlasterData({ ...docSnap.data(), id: blaster});
       setBlasterHero(docSnap.data().imageArray[0])
     };
     getData();
-  }, []);
+  }, [blaster]);
 
   function handleChange(newValue) {
     setBlasterHero(newValue);
