@@ -228,3 +228,39 @@ button {
   padding: 20px;
   color: white;
 }
+
+.addMainGrid {
+  display: grid;
+  margin-top: 50px;
+  grid-template-columns:
+    [first] 40px [mainBar] auto [heroMargin] 30px [sidebar] minmax(250px, 1fr) [sidebarEnd] 50px [end];
+  grid-template-rows: [main] auto [second] 100px [third] auto;
+}
+
+.addSideBar{
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 90%;
+  margin: 30px 0px 0px 5%;
+}
+
+.checkGrid{
+  display: grid;
+  grid-column: auto auto;
+}
+
+.addImage{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.addImagesMain {
+  display: flex;
+  width: 150px;
+  max-height: 600px;
+  justify-self: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}

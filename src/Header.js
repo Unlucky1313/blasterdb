@@ -10,6 +10,8 @@ import { setDoc } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_apiKey,
   authDomain: process.env.REACT_APP_authDomain,
@@ -36,8 +38,8 @@ export default function Header(props) {
       </NavLink>
 
       <div className="sideHead">
-        <NavLink className="navLink" to="/blaster">
-          Blaster
+        <NavLink className="navLink" to="/add">
+        <AddCircleIcon /> Add
         </NavLink>
         <section className="profile">
           {user ? (
