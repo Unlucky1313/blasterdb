@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useReducer } from "react";
 import "./App.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -51,13 +51,40 @@ firebase.initializeApp({
   measurementId: process.env.REACT_APP_measurementId,
 });
 
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value
+  }
+ }
+
 export default function AddBlaster(props) {
+  const initialData = {
+    ammo: {
+      full: false,
+      half: false,
+      rival: false,
+      mega: false,
+      megaXL: false,
+      rockets: false
+    },
+    blasterName: "",
+    creator: "",
+    desc: "",
+    files: "",
+    fpsHigh: "",
+    fpsLow: "",
+    imageArray: [],
+    kit: "",
+    propulsion: "",
+    store: ""
+  }
+
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
-  const [blasterData, setBlasterData] = useState({
-    propulsion: ""
-  });
+  const [blasterData, setBlasterData] = useState(initialData);
   const [blasterURLs, setBlasterURLs] = useState([]);
   const [imageURL, setImageURL] = useState("");
+  const [formData, setFormData] = useReducer(formReducer, initialData);
 
   console.log(blasterURLs);
 
@@ -70,12 +97,19 @@ export default function AddBlaster(props) {
 
   function handleChange(newValue) {
     console.log(newValue);
-    setBlasterURLs(blasterURLs.filter((item) => item != newValue));
+    setBlasterURLs(blasterURLs.filter((item) => item !== newValue));
+  }
+
+  const handleChangeForm = event => {
+    setFormData({
+      name: event.target.name,
+      value: event.target.value,
+    });
   }
 
   function sidebarChange(newValue) {
     console.log(newValue);
-    setBlasterURLs(newValue);
+    setBlasterData(newValue);
   }
 
   function changeHero(newValue) {
@@ -93,7 +127,7 @@ export default function AddBlaster(props) {
         sx={{ marginTop: "25px" }}
       >
         <Grid item lg={3}>
-          <AddSidebar blasterData={blasterData} onChange={sidebarChange} />
+          <AddSidebar blasterData={formData} setBlasterData = {setBlasterData} onChange={handleChangeForm}  />
         </Grid>
         <Grid item lg={7.5}>
           <div className="addImage">
@@ -127,7 +161,7 @@ export default function AddBlaster(props) {
             </div>
 
             {blasterURLs.map((url) => (
-              <URLItem key={url} url={url} />
+              <URLItem key={url} url={url} onChange = {handleChange}/>
             ))}
           </Card>
           <AddDescription descText={blasterData.desc} />
@@ -164,13 +198,17 @@ function URLItem(props) {
   );
 }
 
-function AddSidebar(props) {
-  function removeURL(event) {
-    // Here, we invoke the callback with the new value
-    console.log(props.blasterData)
-    props.onChange(props.blasterData);
-    return <></>;
-  }
+function AddSidebar({blasterData, setBlasterData, onChange}) {
+  // function dataChange(event) {
+  //   // Here, we invoke the callback with the new value
+  //   console.log("hello", props.blasterData)
+  //   props.onChange(props.blasterData);
+  //   return <></>;
+  // }
+
+    const dataChange = () => {
+      onChange("hi");
+    }
 
   return (
     <Card className="sidebar">
@@ -183,8 +221,9 @@ function AddSidebar(props) {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={props.blasterData.propulsion}
+            value={blasterData.propulsion}
             label="Propulsion"
+            onChange={dataChange}
           >
             <MenuItem value="">
               <em>None</em>
