@@ -5,41 +5,30 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 import caliburnIcon from "./img/caliburnIcon.png";
-import { doc, getDoc } from "firebase/firestore";
 
 import HeroImg from "./HeroImg.js";
-import Sidebar from "./Sidebar.js";
-import Description from "./Description";
 
 import Card from "@mui/material/Card";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
-import RedeemIcon from "@mui/icons-material/Redeem";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Link from "@mui/material/Link";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
-
-import fps from "./img/FPS.png";
-import btype from "./img/btype.png";
-import darts from "./img/darts.png";
-import { margin } from "@mui/system";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_apiKey,
@@ -54,9 +43,9 @@ firebase.initializeApp({
 const formReducer = (state, event) => {
   return {
     ...state,
-    [event.name]: event.value
-  }
- }
+    [event.name]: event.value,
+  };
+};
 
 export default function AddBlaster(props) {
   const initialData = {
@@ -66,51 +55,61 @@ export default function AddBlaster(props) {
       rival: false,
       mega: false,
       megaXL: false,
-      rockets: false
+      rockets: false,
     },
     blasterName: "",
     creator: "",
     desc: "",
+    diff: "",
     files: "",
     fpsHigh: "",
     fpsLow: "",
     imageArray: [],
     kit: "",
     propulsion: "",
-    store: ""
-  }
+    store: "",
+  };
 
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
-  const [blasterData, setBlasterData] = useState(initialData);
-  const [blasterURLs, setBlasterURLs] = useState([]);
   const [imageURL, setImageURL] = useState("");
   const [formData, setFormData] = useReducer(formReducer, initialData);
+  const [currTab, setCurrTab] = React.useState(0);
 
-  console.log(blasterURLs);
+  const changeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrTab(newValue);
+  };
 
   const addURL = () => {
-    if (imageURL != "") {
-      setBlasterURLs([...blasterURLs, imageURL]);
+    if (imageURL !== "") {
       setImageURL("");
+
+      setFormData({
+        name: "imageArray",
+        value: [...formData.imageArray, imageURL],
+      });
     }
   };
 
   function handleChange(newValue) {
-    console.log(newValue);
-    setBlasterURLs(blasterURLs.filter((item) => item !== newValue));
+    setFormData({
+      name: "imageArray",
+      value: formData.imageArray.filter((item) => item !== newValue),
+    });
   }
 
-  const handleChangeForm = event => {
+  const handleChangeForm = (event) => {
     setFormData({
       name: event.target.name,
       value: event.target.value,
     });
-  }
+  };
 
-  function sidebarChange(newValue) {
-    console.log(newValue);
-    setBlasterData(newValue);
-  }
+  const ammoChange = (ammoVal) => {
+    setFormData({
+      name: "ammo",
+      value: ammoVal,
+    });
+  };
 
   function changeHero(newValue) {
     setBlasterHero(newValue);
@@ -127,14 +126,21 @@ export default function AddBlaster(props) {
         sx={{ marginTop: "25px" }}
       >
         <Grid item lg={3}>
-          <AddSidebar blasterData={formData} setBlasterData = {setBlasterData} onChange={handleChangeForm}  />
+          <AddSidebar
+            blasterData={formData}
+            onChange={handleChangeForm}
+            ammoChange={ammoChange}
+          />
         </Grid>
-        <Grid item lg={7.5}>
+        <Grid item lg={7.5} sx={{ width: "100%" }}>
           <div className="addImage">
-            <AddImageSelector imageArray={blasterURLs} onChange={changeHero}/>
+            <AddImageSelector
+              imageArray={formData.imageArray}
+              onChange={changeHero}
+            />
             <HeroImg blasterImage={blasterHero} />
           </div>
-          <Card sx={{ marginTop: "20px", marginBottom: "20px" }}>
+          <Card className="addImageCard">
             <div
               style={{
                 display: "flex",
@@ -153,18 +159,44 @@ export default function AddBlaster(props) {
                 variant="contained"
                 onClick={addURL}
                 size="large"
-                sx={{ width: "10%", height: "54px" }}
+                className="addImageButton"
               >
                 <AddCircleIcon sx={{ paddingRight: "8px" }} />
                 Add
               </Button>
             </div>
 
-            {blasterURLs.map((url) => (
-              <URLItem key={url} url={url} onChange = {handleChange}/>
+            {formData.imageArray.map((url) => (
+              <URLItem key={url} url={url} onChange={handleChange} />
             ))}
           </Card>
-          <AddDescription descText={blasterData.desc} />
+
+          <Card className="tabBox">
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={currTab}
+                onChange={changeTab}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Description" />
+                <Tab label="Other Files/Links" />
+                <Tab label="Images" />
+                <Tab label="Video Reviews" />
+                <Tab label="Reviews" />
+              </Tabs>
+            </Box>
+            {currTab === 0 && (
+              <AddDescription value={currTab} index={0}>
+                Item One
+              </AddDescription>
+            )}
+            {currTab === 1 && (
+              <AddDescription value={currTab} index={1}>
+                Item Two
+              </AddDescription>
+            )}
+            {currTab === 2 && <HeroImg index={2}>Item Three</HeroImg>}
+          </Card>
         </Grid>
       </Grid>
     </div>
@@ -174,10 +206,8 @@ export default function AddBlaster(props) {
 function AddDescription(props) {
   return (
     <>
-      <Card className="description">
-        <h2>Description:</h2>
-        <TextField multiline sx={{padding:"16px"}}/>
-      </Card>
+      <h2>Description:</h2>
+      <TextField multiline sx={{ padding: "16px" }} />
     </>
   );
 }
@@ -198,23 +228,32 @@ function URLItem(props) {
   );
 }
 
-function AddSidebar({blasterData, setBlasterData, onChange}) {
-  // function dataChange(event) {
-  //   // Here, we invoke the callback with the new value
-  //   console.log("hello", props.blasterData)
-  //   props.onChange(props.blasterData);
-  //   return <></>;
-  // }
+function AddSidebar({ blasterData, onChange, ammoChange }) {
+  const dataChange = (event) => {
+    onChange(event);
+  };
 
-    const dataChange = () => {
-      onChange("hi");
-    }
+  const sideAmmoChange = (ammo) => {
+    ammoChange(ammo);
+  };
 
   return (
     <Card className="sidebar">
       <div className="addSideBar">
-        <TextField id="outlined-required" label="Blaster Name" />
-        <TextField id="outlined-required" label="Creator" />
+        <TextField
+          id="outlined-required"
+          label="Blaster Name"
+          onChange={dataChange}
+          name="blasterName"
+          value={blasterData.blasterName}
+        />
+        <TextField
+          id="outlined-required"
+          label="Creator"
+          onChange={dataChange}
+          name="creator"
+          value={blasterData.creator}
+        />
         <Divider />
         <FormControl>
           <InputLabel id="demo-simple-select-label">Propulsion</InputLabel>
@@ -224,6 +263,7 @@ function AddSidebar({blasterData, setBlasterData, onChange}) {
             value={blasterData.propulsion}
             label="Propulsion"
             onChange={dataChange}
+            name="propulsion"
           >
             <MenuItem value="">
               <em>None</em>
@@ -238,8 +278,10 @@ function AddSidebar({blasterData, setBlasterData, onChange}) {
           <Select
             labelId="diffSelectLabel"
             id="diffSelect"
-            value={""}
+            value={blasterData.diff}
             label="Difficulty of Build"
+            onChange={dataChange}
+            name="diff"
           >
             <MenuItem value="">
               <em>None</em>
@@ -264,26 +306,56 @@ function AddSidebar({blasterData, setBlasterData, onChange}) {
               alignItems="flex-start"
             >
               <Grid item xs>
-                <TextField id="outlined-helperText" label="Min FPS" />
+                <TextField
+                  id="outlined-helperText"
+                  label="Min FPS"
+                  onChange={dataChange}
+                  name="fpsLow"
+                  value={blasterData.fpsLow}
+                />
               </Grid>
               <Grid item xs>
                 <TextField
                   id="outlined-helperText"
                   label="Max FPS"
                   helperText="Only if FPS is variable"
+                  onChange={dataChange}
+                  name="fpsHigh"
+                  value={blasterData.fpsHigh}
                 />
               </Grid>
             </Grid>
           </FormGroup>
         </FormControl>
 
-        <AmmoType />
+        <AmmoType ammo={blasterData.ammo} onChange={sideAmmoChange} />
 
         <Divider />
 
-        <TextField id="outlined-required" label="Store" size="small" />
-        <TextField id="outlined-required" label="Kit" size="small" />
-        <TextField id="outlined-required" label="Files" size="small" />
+        <TextField
+          id="outlined-required"
+          label="Store"
+          size="small"
+          onChange={dataChange}
+          name="store"
+          value={blasterData.store}
+        />
+        <TextField
+          id="outlined-required"
+          label="Kit"
+          size="small"
+          onChange={dataChange}
+          name="kit"
+          value={blasterData.kit}
+        />
+        <TextField
+          id="outlined-required"
+          label="Files"
+          size="small"
+          onChange={dataChange}
+          name="files"
+          value={blasterData.files}
+        />
 
         <Divider />
       </div>
@@ -291,7 +363,12 @@ function AddSidebar({blasterData, setBlasterData, onChange}) {
   );
 }
 
-function AmmoType(props) {
+function AmmoType({ ammo, onChange }) {
+  const dataChange = (event) => {
+    ammo[event.target.name] = event.target.checked;
+    onChange(ammo);
+  };
+
   return (
     <FormControl
       sx={{ m: 3, marginTop: 0 }}
@@ -310,19 +387,37 @@ function AmmoType(props) {
             >
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.half} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.half}
+                      onChange={dataChange}
+                      name="half"
+                    />
+                  }
                   label="Half Length Darts"
                 />
               </Grid>
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.full} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.full}
+                      onChange={dataChange}
+                      name="full"
+                    />
+                  }
                   label="Full length Darts"
                 />
               </Grid>
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.rival} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.rival}
+                      onChange={dataChange}
+                      name="rival"
+                    />
+                  }
                   label="Rival"
                 />
               </Grid>
@@ -337,19 +432,37 @@ function AmmoType(props) {
             >
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.mega} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.mega}
+                      onChange={dataChange}
+                      name="mega"
+                    />
+                  }
                   label="Mega Darts"
                 />
               </Grid>
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.megaXL} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.megaXL}
+                      onChange={dataChange}
+                      name="megaXL"
+                    />
+                  }
                   label="MegaXL Darts"
                 />
               </Grid>
               <Grid item xs={6}>
                 <FormControlLabel
-                  control={<Checkbox checked={props.rocket} />}
+                  control={
+                    <Checkbox
+                      checked={ammo.rockets}
+                      onChange={dataChange}
+                      name="rockets"
+                    />
+                  }
                   label="Rockets"
                 />
               </Grid>

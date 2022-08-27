@@ -149,6 +149,36 @@ body {
   grid-row: 1;
 }
 
+.description {
+  display: flex;
+  flex-direction: column;
+  grid-column-start: imageSelect;
+  grid-column-end: heroEnd;
+  width: 100%;
+  grid-row-start: 3;
+  grid-row-end: 3;
+}
+
+.tabBox {
+  display: flex;
+  flex-direction: column;
+  grid-column-start: imageSelect;
+  grid-column-end: heroEnd;
+  width: 100%;
+  grid-row-start: 3;
+  grid-row-end: 3;
+}
+
+.addImageCard {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.addImageButton {
+  width: 10%;
+  height: 54px;
+}
+
 @media only screen and (max-width: 900px) {
   .main {
     display: block;
@@ -187,6 +217,23 @@ body {
     width: 150px;
     padding: 5%;
   }
+  .description {
+    margin: 10px;
+    width: auto;
+  }
+  .tabBox {
+    margin: 10px;
+    width: auto;
+  }
+
+  .addImageCard {
+    margin: 10px;
+    width: auto;
+  }
+
+  .addImageButton {
+    width: auto;
+  }
 }
 
 button {
@@ -197,16 +244,6 @@ button {
   align-self: center;
   margin: 10px;
   color: white;
-}
-
-.description {
-  display: flex;
-  flex-direction: column;
-  grid-column-start: imageSelect;
-  grid-column-end: heroEnd;
-  width: 100%;
-  grid-row-start: 3;
-  grid-row-end: 3;
 }
 
 @keyframes App-logo-spin {
@@ -233,11 +270,12 @@ button {
   display: grid;
   margin-top: 50px;
   grid-template-columns:
-    [first] 40px [mainBar] auto [heroMargin] 30px [sidebar] minmax(250px, 1fr) [sidebarEnd] 50px [end];
+    [first] 40px [mainBar] auto [heroMargin] 30px [sidebar] minmax(250px, 1fr)
+    [sidebarEnd] 50px [end];
   grid-template-rows: [main] auto [second] 100px [third] auto;
 }
 
-.addSideBar{
+.addSideBar {
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -245,12 +283,12 @@ button {
   margin: 30px 0px 0px 5%;
 }
 
-.checkGrid{
+.checkGrid {
   display: grid;
   grid-column: auto auto;
 }
 
-.addImage{
+.addImage {
   display: flex;
   flex-direction: row;
   gap: 20px;
