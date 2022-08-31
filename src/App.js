@@ -8,7 +8,7 @@ import Header from "./Header.js";
 // import Footer from "./Footer.js";
 import BlasterPage from "./BlasterPage.js";
 import Home from "./Home.js";
-import AddBlaster from "./AddBlaster.js";
+import AddBlaster from "./AddBlasterPage/AddBlaster.js";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
