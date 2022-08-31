@@ -39,7 +39,7 @@ function BlasterPage(props) {
   const [blasterData, setBlasterData] = useState([]);
   const [currTab, setCurrTab] = React.useState(0);
 
-  const changeTab = (event: React.SyntheticEvent, newValue: number) => {
+  const changeTab = (event, newValue) => {
     setCurrTab(newValue);
   };
 
