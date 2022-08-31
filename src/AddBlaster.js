@@ -30,6 +30,10 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_apiKey,
   authDomain: process.env.REACT_APP_authDomain,
@@ -48,6 +52,8 @@ const formReducer = (state, event) => {
 };
 
 export default function AddBlaster(props) {
+  const dayjs = require("dayjs");
+
   const initialData = {
     ammo: {
       full: false,
@@ -67,6 +73,7 @@ export default function AddBlaster(props) {
     imageArray: [],
     kit: "",
     propulsion: "",
+    released: dayjs().format("MM-DD-YYYY"),
     store: "",
   };
 
@@ -75,7 +82,7 @@ export default function AddBlaster(props) {
   const [formData, setFormData] = useReducer(formReducer, initialData);
   const [currTab, setCurrTab] = React.useState(0);
 
-  const changeTab = (event: React.SyntheticEvent, newValue: number) => {
+  const changeTab = (event, newValue) => {
     setCurrTab(newValue);
   };
 
@@ -111,6 +118,13 @@ export default function AddBlaster(props) {
     });
   };
 
+  const dateChange = (dateVal) => {
+    setFormData({
+      name: "released",
+      value: dateVal.format("MM-DD-YYYY"),
+    });
+  };
+
   function changeHero(newValue) {
     setBlasterHero(newValue);
   }
@@ -130,6 +144,7 @@ export default function AddBlaster(props) {
             blasterData={formData}
             onChange={handleChangeForm}
             ammoChange={ammoChange}
+            dateChange={dateChange}
           />
         </Grid>
         <Grid item lg={7.5} sx={{ width: "100%" }}>
@@ -228,8 +243,9 @@ function URLItem(props) {
   );
 }
 
-function AddSidebar({ blasterData, onChange, ammoChange }) {
+function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
   const dataChange = (event) => {
+    console.log(event.target.value);
     onChange(event);
   };
 
@@ -237,9 +253,18 @@ function AddSidebar({ blasterData, onChange, ammoChange }) {
     ammoChange(ammo);
   };
 
+  const handleDate = (val) => {
+    dateChange(val)
+  };
+
+  
+
+  //JSX
+
   return (
     <Card className="sidebar">
       <div className="addSideBar">
+
         <TextField
           id="outlined-required"
           label="Blaster Name"
@@ -254,6 +279,15 @@ function AddSidebar({ blasterData, onChange, ammoChange }) {
           name="creator"
           value={blasterData.creator}
         />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Release Date"
+            value={blasterData.released}
+            name="released"
+            onChange={handleDate}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
         <Divider />
         <FormControl>
           <InputLabel id="demo-simple-select-label">Propulsion</InputLabel>
@@ -264,6 +298,7 @@ function AddSidebar({ blasterData, onChange, ammoChange }) {
             label="Propulsion"
             onChange={dataChange}
             name="propulsion"
+            sx={{ textAlign: "left" }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -282,6 +317,7 @@ function AddSidebar({ blasterData, onChange, ammoChange }) {
             label="Difficulty of Build"
             onChange={dataChange}
             name="diff"
+            sx={{ textAlign: "left" }}
           >
             <MenuItem value="">
               <em>None</em>

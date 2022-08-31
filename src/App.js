@@ -5,7 +5,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 import Header from "./Header.js";
-import Footer from "./Footer.js";
+// import Footer from "./Footer.js";
 import BlasterPage from "./BlasterPage.js";
 import Home from "./Home.js";
 import AddBlaster from "./AddBlaster.js";
@@ -35,8 +35,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home user={user} />} />
         <Route path="/blaster" element={<BlasterPage />} />
-        <Route path='/add' element={<AddBlaster/>} />
-          {/* <Route path='/blogs' element={<Blogs/>} />
+        <Route path="/add" element={<AddBlaster />} />
+        {/* <Route path='/blogs' element={<Blogs/>} />
           <Route path='/sign-up' element={<SignUp/>} /> */}
       </Routes>
       {/* <Footer /> */}

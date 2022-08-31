@@ -8,24 +8,29 @@ import Typography from "@mui/material/Typography";
 
 export default function Footer() {
   return (
-    <Paper className="footerWrap" sx={{marginTop: 'calc(10% + 60px)',
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    width: '100%'
-    }} component="footer" square variant="outlined">
+    <Paper
+      className="footerWrap"
+      sx={{
+        marginTop: "calc(10% + 60px)",
+        position: "fixed",
+        bottom: 0,
+      }}
+      component="footer"
+      square
+      variant="outlined"
+    >
       <Container maxWidth="lg">
         <Box
           sx={{
             flexGrow: 1,
             justifyContent: "center",
             display: "flex",
-            my:1
+            my: 1,
           }}
         >
-            <div>
+          <div>
             <img priority src="/Logo.svg" width={75} height={30} alt="Logo" />
-            </div>
+          </div>
         </Box>
 
         <Box
