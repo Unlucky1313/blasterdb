@@ -64,11 +64,15 @@ function BlasterPage(props) {
   return (
     <div className="App">
       <div className="main">
-        <HeroImg blasterImage={blasterHero} />
-        <ImageSelector
-          imageArray={blasterData.imageArray}
-          onChange={handleChange}
-        />
+        <div className="addImageContainer">
+          <div className="addImage">
+            <ImageSelector
+              imageArray={blasterData.imageArray}
+              onChange={handleChange}
+            />
+            <HeroImg blasterImage={blasterHero} />
+          </div>
+        </div>
         <Sidebar blasterData={blasterData} />
         <Card className="tabBox">
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

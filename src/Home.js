@@ -30,6 +30,7 @@ export default function Home(props) {
       <BlasterCard user={props.user} blaster={"5GiHVMHTlcFp6MEbt9EQ"} />
       <BlasterCard user={props.user} blaster={"J9k2v2vm3gSTpHYyFFzt"} />
       <BlasterCard user={props.user} blaster={"BCV9lIU2Tk00377fH0A7"} />
+      <BlasterCard user={props.user} blaster={"JTbAIHFbdpS58LB4VxRL"} />
     </div>
   );
 }

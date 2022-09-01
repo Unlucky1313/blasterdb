@@ -79,8 +79,9 @@ export default function AddBlaster(props) {
   const [imageURL, setImageURL] = useState("");
   const [formData, setFormData] = useReducer(formReducer, initialData);
   const [currTab, setCurrTab] = React.useState(0);
-
   const [videoKey, setVideoKey] = React.useState("");
+  const firestore = firebase.firestore();
+
   const changeTab = (event, newValue) => {
     setCurrTab(newValue);
   };
@@ -155,6 +156,12 @@ export default function AddBlaster(props) {
     setBlasterHero(newValue);
   }
 
+  const submitBlaster = async (e) => {
+    await firestore.collection("blasters").add(formData);
+
+    setFormData(initialData);
+  };
+
   return (
     <div className="App">
       <Grid
@@ -163,7 +170,7 @@ export default function AddBlaster(props) {
         justifyContent="center"
         alignItems="flex-start"
         direction="row-reverse"
-        sx={{ marginTop: "25px" }}
+        sx={{ marginTop: "25px", gap: "0px" }}
       >
         <Grid item lg={3}>
           <AddSidebar
@@ -174,12 +181,14 @@ export default function AddBlaster(props) {
           />
         </Grid>
         <Grid item lg={7.5} sx={{ width: "100%" }}>
-          <div className="addImage">
-            <AddImageSelector
-              imageArray={formData.imageArray}
-              onChange={changeHero}
-            />
-            <HeroImg blasterImage={blasterHero} />
+          <div className="addImageContainer">
+            <div className="addImage">
+              <AddImageSelector
+                imageArray={formData.imageArray}
+                onChange={changeHero}
+              />
+              <HeroImg blasterImage={blasterHero} />
+            </div>
           </div>
           <Card className="addImageCard">
             <div
@@ -268,6 +277,8 @@ export default function AddBlaster(props) {
                     display: "flex",
                     flexWrap: "wrap",
                     justifyContent: "center",
+                    maxHeight: "650px",
+                    overflow: "auto",
                   }}
                 >
                   {formData.videoReviews.map((url) => (
@@ -285,7 +296,12 @@ export default function AddBlaster(props) {
       </Grid>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button size="large" variant="contained" style={{}}>
+        <Button
+          size="large"
+          variant="contained"
+          style={{}}
+          onClick={submitBlaster}
+        >
           Submit
         </Button>
       </div>
