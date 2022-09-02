@@ -184,19 +184,19 @@ body {
 
   .sidebar {
     grid-column-start: 1;
-    margin: 10px;
+    margin: 12px;
     width: auto;
   }
 
   .imgCard {
     grid-column-start: 1;
-    margin: 10px;
+    margin: 12px;
     width: auto;
   }
 
   .imagesMain {
     grid-column-start: 1;
-    margin: 10px;
+    margin: 12px;
     flex-direction: row;
     flex-wrap: nowrap;
     height: 100px;
@@ -214,16 +214,16 @@ body {
     padding: 5%;
   }
   .description {
-    margin: 10px;
+    margin: 12px;
     width: auto;
   }
   .tabBox {
-    margin: 10px;
+    margin: 24px 12px 12px 12px;
     width: auto;
   }
 
   .addImageCard {
-    margin: 10px;
+    margin: 12px;
     width: auto;
   }
 
@@ -238,7 +238,7 @@ button {
 
 .title {
   align-self: center;
-  margin: 10px;
+  margin: 12px;
   color: white;
 }
 
@@ -328,12 +328,12 @@ button {
     justify-self: center;
     justify-content: center;
     flex-direction: column;
-    margin: 0px 10px 10px 10px;
+    margin: 0px 12px 0px 12px;
   }
 
   .imagesMain {
     grid-column-start: 1;
-    margin: 10px;
+    margin: 12px;
     flex-direction: row;
     flex-wrap: nowrap;
     height: 100px;
