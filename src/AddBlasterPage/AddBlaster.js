@@ -11,7 +11,6 @@ import HeroImg from "../HeroImg.js";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Link from "@mui/material/Link";
@@ -164,137 +163,125 @@ export default function AddBlaster(props) {
 
   return (
     <div className="App">
-      <Grid
-        container
-        spacing={3}
-        justifyContent="center"
-        alignItems="flex-start"
-        direction="row-reverse"
-        sx={{ marginTop: "25px", gap: "0px" }}
-      >
-        <Grid item lg={3}>
-          <AddSidebar
-            blasterData={formData}
-            onChange={handleChangeForm}
-            ammoChange={ammoChange}
-            dateChange={dateChange}
-          />
-        </Grid>
-        <Grid item lg={7.5} sx={{ width: "100%" }}>
-          <div className="addImageContainer">
-            <div className="addImage">
-              <AddImageSelector
-                imageArray={formData.imageArray}
-                onChange={changeHero}
-              />
-              <HeroImg blasterImage={blasterHero} />
-            </div>
+      <div className="main">
+        <AddSidebar
+          blasterData={formData}
+          onChange={handleChangeForm}
+          ammoChange={ammoChange}
+          dateChange={dateChange}
+        />
+        <div className="imageContainer">
+          <div className="addImage">
+            <AddImageSelector
+              imageArray={formData.imageArray}
+              onChange={changeHero}
+            />
+            <HeroImg blasterImage={blasterHero} />
           </div>
-          <Card className="addImageCard">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "15px",
-              }}
+        </div>
+        <Card className="addImageCard">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "15px",
+            }}
+          >
+            <TextField
+              id="outlined-required"
+              label="Blaster Image URL"
+              sx={{ width: "90%" }}
+              value={imageURL}
+              onChange={(e) => setImageURL(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              onClick={addURL}
+              size="large"
+              className="addImageButton"
             >
-              <TextField
-                id="outlined-required"
-                label="Blaster Image URL"
-                sx={{ width: "90%" }}
-                value={imageURL}
-                onChange={(e) => setImageURL(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                onClick={addURL}
-                size="large"
-                className="addImageButton"
-              >
-                <AddCircleIcon sx={{ paddingRight: "8px" }} />
-                Add
-              </Button>
-            </div>
+              <AddCircleIcon sx={{ paddingRight: "8px" }} />
+              Add
+            </Button>
+          </div>
 
-            {formData.imageArray.map((url) => (
-              <URLItem key={url} url={url} onChange={handleChange} />
-            ))}
-          </Card>
+          {formData.imageArray.map((url) => (
+            <URLItem key={url} url={url} onChange={handleChange} />
+          ))}
+        </Card>
 
-          <Card className="tabBox">
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={currTab}
-                onChange={changeTab}
-                aria-label="basic tabs example"
+        <Card className="tabBox">
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={currTab}
+              onChange={changeTab}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Description" />
+              {/* <Tab label="Other Files/Links" /> */}
+              {/* <Tab label="Images" /> */}
+              <Tab label="Video Reviews" />
+              {/* <Tab label="Reviews" /> */}
+            </Tabs>
+          </Box>
+          {currTab === 0 && (
+            <AddDescription value={currTab} index={0}>
+              Item One
+            </AddDescription>
+          )}
+          {currTab === 3 && (
+            <AddDescription value={currTab} index={1}>
+              Item Two
+            </AddDescription>
+          )}
+          {currTab === 2 && <HeroImg index={2}>Item Three</HeroImg>}
+          {currTab === 1 && (
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "15px",
+                }}
               >
-                <Tab label="Description" />
-                {/* <Tab label="Other Files/Links" /> */}
-                {/* <Tab label="Images" /> */}
-                <Tab label="Video Reviews" />
-                {/* <Tab label="Reviews" /> */}
-              </Tabs>
-            </Box>
-            {currTab === 0 && (
-              <AddDescription value={currTab} index={0}>
-                Item One
-              </AddDescription>
-            )}
-            {currTab === 3 && (
-              <AddDescription value={currTab} index={1}>
-                Item Two
-              </AddDescription>
-            )}
-            {currTab === 2 && <HeroImg index={2}>Item Three</HeroImg>}
-            {currTab === 1 && (
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    margin: "15px",
-                  }}
+                <TextField
+                  id="outlined-required"
+                  label="Youtube Key"
+                  sx={{ width: "90%" }}
+                  value={videoKey}
+                  onChange={(e) => setVideoKey(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  onClick={addVideoUrl}
+                  size="large"
+                  className="addImageButton"
                 >
-                  <TextField
-                    id="outlined-required"
-                    label="Youtube Key"
-                    sx={{ width: "90%" }}
-                    value={videoKey}
-                    onChange={(e) => setVideoKey(e.target.value)}
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={addVideoUrl}
-                    size="large"
-                    className="addImageButton"
-                  >
-                    <AddCircleIcon sx={{ paddingRight: "8px" }} />
-                    Add
-                  </Button>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    maxHeight: "650px",
-                    overflow: "auto",
-                  }}
-                >
-                  {formData.videoReviews.map((url) => (
-                    <VideoEmbed
-                      key={url}
-                      url={url}
-                      onChange={handleVideoRemove}
-                    />
-                  ))}
-                </div>
+                  <AddCircleIcon sx={{ paddingRight: "8px" }} />
+                  Add
+                </Button>
               </div>
-            )}
-          </Card>
-        </Grid>
-      </Grid>
-
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  maxHeight: "650px",
+                  overflow: "auto",
+                }}
+              >
+                {formData.videoReviews.map((url) => (
+                  <VideoEmbed
+                    key={url}
+                    url={url}
+                    onChange={handleVideoRemove}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+      </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button
           size="large"
@@ -325,10 +312,17 @@ function URLItem(props) {
     return <></>;
   }
   return (
-    <div style={{ margin: "12px", textAlign: "left", display: "flex" }}>
+    <div
+      style={{
+        margin: "12px",
+        textAlign: "left",
+        display: "flex",
+        overflow: "auto",
+      }}
+    >
       <CloseIcon sx={{ paddingRight: "8px" }} onClick={removeURL} />
-      <Link href={props.url} sx={{ verticalAlign: "center" }} target="_blank">
-        {props.url}
+      <Link href={props.url} target="_blank">
+        {props.url.substring(0, 35) + " •••"}
       </Link>
     </div>
   );

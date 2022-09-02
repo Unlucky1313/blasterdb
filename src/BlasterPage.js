@@ -64,7 +64,8 @@ function BlasterPage(props) {
   return (
     <div className="App">
       <div className="main">
-        <div className="addImageContainer">
+        <Sidebar blasterData={blasterData} />
+        <div className="imageContainer">
           <div className="addImage">
             <ImageSelector
               imageArray={blasterData.imageArray}
@@ -73,13 +74,15 @@ function BlasterPage(props) {
             <HeroImg blasterImage={blasterHero} />
           </div>
         </div>
-        <Sidebar blasterData={blasterData} />
+
         <Card className="tabBox">
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
               value={currTab}
               onChange={changeTab}
               aria-label="basic tabs example"
+              scrollButtons="auto"
+              variant="scrollable"
             >
               <Tab label="Description" />
               <Tab label="Other Files/Links" />

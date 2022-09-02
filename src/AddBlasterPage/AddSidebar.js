@@ -48,7 +48,7 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
   //JSX
 
   return (
-    <Card className="sidebar">
+    <Card className="sidebar" sx={{ marginBottom: "30vh" }}>
       <div className="addSideBar">
         <TextField
           id="outlined-required"
