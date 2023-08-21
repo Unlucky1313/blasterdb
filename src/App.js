@@ -8,6 +8,7 @@ import Header from "./Header.js";
 import BlasterPage from "./BlasterPage.js";
 import Home from "./Home.js";
 import AddBlaster from "./AddBlasterPage/AddBlaster.js";
+import UpdateBlaster from "./AddBlasterPage/UpdateBlaster.js";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<Home user={user} />} />
         <Route path="/blaster" element={<BlasterPage />} />
         <Route path="/add" element={<AddBlaster />} />
+        <Route path="/update" element={<UpdateBlaster />} />
         {/* <Route path='/blogs' element={<Blogs/>} />
           <Route path='/sign-up' element={<SignUp/>} /> */}
       </Routes>
