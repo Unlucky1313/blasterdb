@@ -13,8 +13,6 @@ import HeroImg from "../HeroImg.js";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Link from "@mui/material/Link";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
@@ -23,6 +21,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
 import AddSidebar from "./AddSidebar";
+import ImageSelector from "../ImageSelector.js";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -57,6 +56,9 @@ const formReducer = (state, event) => {
       };
   }
 };
+
+
+
 
 export default function UpdateBlaster(props) {
   const dayjs = require("dayjs");
@@ -151,12 +153,7 @@ export default function UpdateBlaster(props) {
     }
   };
 
-  function handleChange(newValue) {
-    setFormData({
-      name: "imageArray",
-      value: formData.imageArray.filter((item) => item !== newValue),
-    });
-  }
+
 
   function handleVideoRemove(newValue) {
     console.timeLog(formData);
@@ -193,7 +190,7 @@ export default function UpdateBlaster(props) {
   }
 
   const submitBlaster = async (e) => {
-    await firestore.collection("blasters").doc(formData.id).update({...formData}).then(function () {
+    await firestore.collection("blasters").doc(formData.id).update({ ...formData }).then(function () {
       console.log("Document successfully updated!");
     }).then(function () {
       console.log("Document successfully updated!");
@@ -208,51 +205,32 @@ export default function UpdateBlaster(props) {
   return (
     <div className="App">
       <div className="main">
+
+
+        {/* Sidebar */}
+
         <AddSidebar
           blasterData={formData}
           onChange={handleChangeForm}
           ammoChange={ammoChange}
           dateChange={dateChange}
         />
+
+        {/* Main Image */}
+
         <div className="imageContainer">
           <div className="addImage">
-            <AddImageSelector
+            <ImageSelector
               imageArray={formData.imageArray}
               onChange={changeHero}
             />
             <HeroImg blasterImage={blasterHero} />
           </div>
         </div>
-        <Card className="addImageCard">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "15px",
-            }}
-          >
-            <TextField
-              id="outlined-required"
-              label="Blaster Image URL"
-              sx={{ width: "90%" }}
-              value={imageURL}
-              onChange={(e) => setImageURL(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              onClick={addURL}
-              size="large"
-              className="addImageButton"
-            >
-              <AddCircleIcon sx={{ paddingRight: "8px" }} />
-              Add
-            </Button>
-          </div>
 
-          {formData.imageArray.map((url) => (
-            <URLItem key={url} url={url} onChange={handleChange} />
-          ))}
-        </Card>
+        {/* Image Add Box */}
+
+        {/* <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={formData.imageArray} addURL={addURL}></AddImage> */}
 
         <Card className="tabBox">
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -408,45 +386,32 @@ function VideoEmbed(props) {
   );
 }
 
-function AddImageSelector(props) {
-  const onChange = (url) => {
-    // Here, we invoke the callback with the new value
-    props.onChange(url);
-  };
-  return (
-    <Card className="addImagesMain coolScroll" sx={{ overflow: "auto" }}>
-      <List
-        className="flexList coolScroll"
-        sx={{
-          width: "100%",
-        }}
-      >
-        {props.imageArray &&
-          props.imageArray.map((image) => (
-            <ImageSelectorGen
-              imageSrc={image}
-              key={image}
-              onChange={onChange}
-            />
-          ))}
-      </List>
-    </Card>
-  );
-}
+// function AddImage(props) {
+//   function handleChange(newValue) {
+//     setFormData({
+//       name: "imageArray",
+//       value: formData.imageArray.filter((item) => item !== newValue),
+//     });
+//   }
 
-function ImageSelectorGen(props) {
-  function handleImgClick(event) {
-    // Here, we invoke the callback with the new value
-    props.onChange(event.target.src);
-  }
-  return (
-    <ListItem>
-      <img
-        src={props.imageSrc}
-        className="imageSmall"
-        onClick={handleImgClick}
-        alt="Blaster Selector"
-      />
-    </ListItem>
-  );
-}
+//   return (<Card className="addImageCard">
+//     <div style={{
+//       display: "flex",
+//       justifyContent: "center",
+//       margin: "15px"
+//     }}>
+//       <TextField id="outlined-required" label="Blaster Image URL" sx={{
+//         width: "90%"
+//       }} value={props.imageURL} onChange={e => props.setImageURL(e.target.value)} />
+//       <Button variant="contained" onClick={props.addURL} size="large" className="addImageButton">
+//         <AddCircleIcon sx={{
+//           paddingRight: "8px"
+//         }} />
+//         Add
+//       </Button>
+//     </div>
+
+//     {props.imageArray.map(url => <URLItem key={url} url={url} onChange={handleChange} />)}
+//   </Card>);
+// }
+

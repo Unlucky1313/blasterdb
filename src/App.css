@@ -322,16 +322,6 @@ button {
   padding-bottom: calc((100% - 170px) * (9 / 16));
 }
 
-.addImagesMain {
-  display: flex;
-  flex-basis: 150px;
-  flex-grow: 0;
-  flex-shrink: 0;
-  justify-self: center;
-  justify-content: flex-start;
-  flex-direction: column;
-}
-
 @media only screen and (max-width: 900px) {
   .addImage {
     flex-direction: column-reverse;
@@ -341,15 +331,5 @@ button {
     position: relative;
     width: 100%;
     padding-bottom: calc((100% * (9 / 16)) + 162px);
-  }
-  .addImagesMain {
-    display: flex;
-    flex-basis: 120px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    justify-self: center;
-    justify-content: center;
-    flex-direction: column;
-    margin: 0px 12px 0px 12px;
   }
 }

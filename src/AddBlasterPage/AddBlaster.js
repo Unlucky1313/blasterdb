@@ -21,6 +21,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
 import AddSidebar from "./AddSidebar";
+import ImageSelector from "../ImageSelector.js";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -184,13 +185,14 @@ export default function AddBlaster(props) {
         />
         <div className="imageContainer">
           <div className="addImage">
-            <AddImageSelector
+            <ImageSelector
               imageArray={formData.imageArray}
               onChange={changeHero}
             />
             <HeroImg blasterImage={blasterHero} />
           </div>
         </div>
+        
         <Card className="addImageCard">
           <div
             style={{
@@ -373,48 +375,5 @@ function VideoEmbed(props) {
         Remove
       </Button>
     </div>
-  );
-}
-
-function AddImageSelector(props) {
-  const onChange = (url) => {
-    // Here, we invoke the callback with the new value
-    props.onChange(url);
-  };
-  return (
-    <Card className="addImagesMain coolScroll" sx={{ overflow: "auto" }}>
-      <List
-        className="flexList coolScroll"
-        sx={{
-          width: "100%",
-        }}
-      >
-        {props.imageArray &&
-          props.imageArray.map((image) => (
-            <ImageSelectorGen
-              imageSrc={image}
-              key={image}
-              onChange={onChange}
-            />
-          ))}
-      </List>
-    </Card>
-  );
-}
-
-function ImageSelectorGen(props) {
-  function handleImgClick(event) {
-    // Here, we invoke the callback with the new value
-    props.onChange(event.target.src);
-  }
-  return (
-    <ListItem>
-      <img
-        src={props.imageSrc}
-        className="imageSmall"
-        onClick={handleImgClick}
-        alt="Blaster Selector"
-      />
-    </ListItem>
   );
 }
