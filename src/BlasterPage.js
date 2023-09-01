@@ -78,17 +78,21 @@ function BlasterPage(props) {
 
   return (
     <div className="App">
-      <div className="main">
+      <Box className='gridMain' sx={{ justifyContent: 'center' }}>
         <Sidebar blasterData={blasterData} />
-        <div className="imageContainer">
-          <div className="addImage">
-            <ImageSelector
-              imageArray={blasterData.imageArray}
-              onChange={handleChange}
-            />
-            <HeroImg blasterImage={blasterHero} />
+
+
+        <Box className="imgBox">
+          <div className="imageContainer">
+            <div className="addImage">
+              <ImageSelector
+                imageArray={blasterData.imageArray}
+                onChange={handleChange}
+              />
+              <HeroImg blasterImage={blasterHero} />
+            </div>
           </div>
-        </div>
+        </Box>
 
         <Card className="tabBox">
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -116,7 +120,7 @@ function BlasterPage(props) {
           {currTab === 1 && <div />}
           {currTab === 2 && <div />}
         </Card>
-      </div>
+      </Box>
     </div>
   );
 }
