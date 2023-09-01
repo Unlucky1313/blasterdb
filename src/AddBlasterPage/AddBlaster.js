@@ -11,6 +11,7 @@ import ImageSelector from "../ImageSelector.js";
 import AddImage from "./AddImage.js";
 import AddTabs from "./AddTabs.js";
 import HeroImg from "../HeroImg.js";
+import Box from "@mui/material/Box";
 
 import caliburnIcon from "../img/caliburnIcon.png";
 
@@ -158,54 +159,44 @@ export default function AddBlaster(props) {
 
   return (
     <div className="App">
-      <div className="main">
+      <Box className='gridMain' sx={{ justifyContent: 'center' }}>
 
+        <Box className="imgBox">
+          {/* Main Image */}
+
+          <div className="imageContainer">
+            <div className="addImage">
+              <ImageSelector
+                imageArray={blasterData.imageArray}
+                onChange={changeHero}
+              />
+              <HeroImg blasterImage={blasterHero} />
+            </div>
+          </div>
+
+          {/* Image Add Box */}
+
+          <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
+
+        </Box>
+        
+        {/* Tab Box */}
+
+        <AddTabs desc={blasterData.desc} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
 
         {/* Sidebar */}
 
-        <AddSidebar
-          blasterData={blasterData}
-          onChange={handleChangeForm}
-          ammoChange={ammoChange}
-          dateChange={dateChange}
-        />
+        <AddSidebar blasterData={blasterData} onChange={handleChangeForm} ammoChange={ammoChange} dateChange={dateChange} />
 
-        {/* Main Image */}
+      </Box>
 
-        <div className="imageContainer">
-          <div className="addImage">
-            <ImageSelector
-              imageArray={blasterData.imageArray}
-              onChange={changeHero}
-            />
-            <HeroImg blasterImage={blasterHero} />
-          </div>
-        </div>
-
-        {/* Image Add Box */}
-
-        <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
-
-        {/* Tab Box */}
-
-        <AddTabs videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
-
-
-      </div>
 
       {/* Submit Button */}
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          size="large"
-          variant="contained"
-          style={{}}
-          onClick={submitBlaster}
-        >
-          Update
-        </Button>
+        <Button size="large" variant="contained" style={{}} onClick={submitBlaster} >Update</Button>
       </div>
-    </div>
+    </div >
   );
 }
 

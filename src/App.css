@@ -53,27 +53,52 @@ body {
   max-height: 350vh;
 }
 
+.imgBox {
+  grid-column: main;
+  grid-row: image;
+}
+
 .imageContainer {
   position: relative;
   padding-bottom: calc((100% - 170px) * (9 / 16));
-  order: 1;
+  display: flex;
+  justify-content: flex-end;
+  /* margin: 10px; */
 }
 
 .sidebar {
   /* grid-column-start: sidebar;
   grid-column-end: sidebarEnd; */
-  flex-basis: 100%;
+  /* flex-basis: 100%;
   color: white;
   margin-bottom: 75vh;
   order: 5;
-  width: 400px;
+  width: 400px; */
+  min-width: 250px;
+  max-width: 400px;
+  width: calc(100%-20px);
+  /* margin: 10px;
+  margin-top: 15px; */
+  grid-column: sidebar;
+  grid-row: image / span 5;
+  color: white;
+  background-color: #282c34;
 }
 
 .break {
   flex-basis: 100%;
   height: 100%;
-  width:100%;
+  width: 100%;
   order: 4;
+}
+
+.gridMain {
+  display: grid;
+  grid-template-columns: [marginLeft] 1fr [main] calc(60vw) [padding] 24px [sidebar] minmax(25%, 380px) [marginRight] 1fr;
+  grid-template-rows: [image] auto [tabs] auto;
+  grid-auto-columns: auto;
+  width: 100%;
+  margin-top: 24px;
 }
 
 .imagesMain {
@@ -85,6 +110,7 @@ body {
   flex-direction: column;
   flex-grow: 0;
   flex-shrink: 0;
+  margin:
 }
 
 .imageSmall {
@@ -128,11 +154,13 @@ body {
   width: 5px;
   height: 5px;
 }
+
 .coolScroll::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
 }
+
 .coolScroll::-webkit-scrollbar-thumb {
   border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px var(--main-primary);
@@ -159,20 +187,24 @@ body {
 }
 
 .description {
-  display: flex;
-  flex-direction: column;
-  grid-column-start: imageSelect;
-  grid-column-end: heroEnd;
-  width: 100%;
-  grid-row-start: 3;
-  grid-row-end: 3;
+  padding: 12px;
+  min-height:50px;
 }
 
 .tabBox {
   display: flex;
   flex-direction: column;
+  grid-column: main;
+  grid-row: tabs;
   width: 100%;
   order: 3;
+  margin-top: 20px;
+}
+
+.addDesc {
+  min-height: 300px;
+  margin: 12px;
+  position: relative;
 }
 
 .addImageCard {
@@ -186,8 +218,9 @@ body {
   height: 54px;
 }
 
+
 @media only screen and (max-width: 900px) {
-  .main {
+  /* .main {
     display: flex;
     flex-direction: column;
     margin: 12px 0px 0px 0px;
@@ -195,17 +228,23 @@ body {
     gap: 0px;
     justify-content: space-evenly;
     max-height: max-content;
-  }
+  } */
 
-  .break {
-    order: 4;
+  .gridMain {
+    grid-template-rows: [image] auto [sidebar] auto [tabs] auto;
+    grid-template-columns: [main] 100%;
+    margin-top: 0px;
   }
 
   .sidebar {
-    grid-column-start: 1;
+    grid-column: main;
+    grid-row: sidebar;
+    max-width: 900px;
     margin: 12px;
-    width: calc(100% - 24px);
-    order: 3;
+  }
+
+  .imgBox {
+    justify-content: center;
   }
 
   .imgCard {
@@ -216,7 +255,7 @@ body {
 
   .imagesMain {
     grid-column-start: 1;
-    margin: 0px 12px 12px 12px;
+    margin: 0px 12px 0px 12px;
     flex-direction: row;
     flex-wrap: nowrap;
     flex-basis: 120px;
@@ -236,14 +275,17 @@ body {
     overflow: auto;
     overflow-y: hidden;
   }
+
   .imageSmall {
     width: 150px;
     padding: 5%;
   }
+
   .description {
     margin: 12px;
     width: auto;
   }
+
   .tabBox {
     margin: 24px 12px 12px 12px;
     width: calc(100% - 24px);
@@ -274,6 +316,7 @@ button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -328,6 +371,7 @@ button {
     flex-direction: column-reverse;
     gap: 0px;
   }
+
   .addImageContainer {
     position: relative;
     width: 100%;

@@ -5,8 +5,35 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Card from "@mui/material/Card";
 import Link from "@mui/material/Link";
 import CloseIcon from "@mui/icons-material/Close";
+import { v4 as uuidv4 } from 'uuid';
+
+import { ref as storageRef, uploadBytes, } from "firebase/storage";
+import React, { useState } from "react";
+import { storage } from "../useFirebase";
 
 export default function AddImage(props) {
+
+  const [imageUpload, setImageUpload] = useState(null);
+
+  const uploadImage = () => {
+    if (imageUpload == null) return;
+
+    const imgName = uuidv4();
+    const imageRef = storageRef(storage, `images/${imgName}`);
+
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      
+      // props.imageURL(imgName);
+      props.addURL(imgName);
+
+      console.log("Image Uploaded");
+      alert("Image Uploaded");
+      // const resizedRef = storageRef(storage, `images/${imgName}_1440x810`);
+      // console.log(getDownloadURL(resizedRef).then((url) => {
+      //   console.log(url);
+      // }));
+    })
+  }
 
   return (<Card className="addImageCard">
     <div style={{
@@ -24,6 +51,52 @@ export default function AddImage(props) {
         Add
       </Button>
     </div>
+
+    {/* <Button
+      variant="contained"
+      component="label"
+    >
+      Choose File */}
+    <input
+      type="file"
+      // hidden
+      onChange={(e) => {
+        if (e.target.files && e.target.files[0]) {
+          setImageUpload(e.target.files[0]);
+          props.changeHero(URL.createObjectURL(e.target.files[0]));
+          console.log(e.target.files[0]);
+          console.log(URL.createObjectURL(e.target.files[0]));
+        }
+      }}
+    />
+    {/* </Button> */}
+
+    <Button
+      variant="contained"
+      component="label"
+      onClick={uploadImage}
+    >
+      Upload File
+
+    </Button>
+
+    {/* <Card className="addImageCard">
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      margin: "15px"
+    }}>
+      <TextField id="outlined-required" label="Blaster Image URL" sx={{
+        width: "90%"
+      }} value={props.imageURL} onChange={e => props.setImageURL(e.target.value)} />
+      <Button variant="contained" onClick={props.addURL} size="large" className="addImageButton">
+        <AddCircleIcon sx={{
+          paddingRight: "8px"
+        }} />
+        Add
+      </Button>
+    </div> */}
+
 
     {props.imageArray.map(url => <URLItem key={url} url={url} onChange={props.handleChange} />)}
   </Card>);

@@ -16,6 +16,7 @@ import AddSidebar from "./AddSidebar";
 import ImageSelector from "../ImageSelector.js";
 import AddImage from "./AddImage.js";
 import AddTabs from "./AddTabs.js";
+import Box from "@mui/material/Box";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -80,7 +81,6 @@ export default function UpdateBlaster(props) {
 
   const [searchParams] = useSearchParams();
   const blaster = searchParams.get("blaster");
-  console.log(blaster);
 
   useEffect(() => {
     const getData = async () => {
@@ -123,13 +123,16 @@ export default function UpdateBlaster(props) {
     }
   };
 
-  const addURL = () => {
-    if (imageURL !== "") {
+  const addURL = (url) => {
+
+    console.log(url);
+
+    if (url !== "") {
       setImageURL("");
 
       setBlasterData({
         name: "imageArray",
-        value: [...blasterData.imageArray, imageURL],
+        value: [...blasterData.imageArray, url],
       });
     }
   };
@@ -164,8 +167,17 @@ export default function UpdateBlaster(props) {
     });
   };
 
+  const changeDesc = (desc) => {
+    setBlasterData({
+      name: "desc",
+      value: desc,
+    });
+
+    console.log(desc);
+  };
+
   function changeHero(newValue) {
-    setBlasterHero(newValue);
+    setBlasterHero(newValue.replace('_256x144','_1440x810'));
   }
 
   const submitBlaster = async (e) => {
@@ -177,60 +189,50 @@ export default function UpdateBlaster(props) {
 
   };
 
-  console.log(blasterData);
-
   return (
     <div className="App">
-      <div className="main">
+      <Box className='gridMain' sx={{ justifyContent: 'center' }}>
 
-        {/* Main Image */}
+        <Box className="imgBox">
+          {/* Main Image */}
 
-        <div className="imageContainer">
-          <div className="addImage">
-            <ImageSelector
-              imageArray={blasterData.imageArray}
-              onChange={changeHero}
-            />
-            <HeroImg blasterImage={blasterHero} />
+          <div className="imageContainer">
+            <div className="addImage">
+              <ImageSelector
+                imageArray={blasterData.imageArray}
+                onChange={changeHero}
+              />
+              <HeroImg blasterImage={blasterHero} />
+            </div>
           </div>
-        </div>
 
-        {/* Image Add Box */}
+          {/* Image Add Box */}
 
-        <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
+          <AddImage changeHero={changeHero} imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
+
+        </Box>
 
         {/* Tab Box */}
 
-        <AddTabs videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
-
-        <div class="break"></div>
+        <AddTabs desc={blasterData.desc} changeDesc={changeDesc} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
 
         {/* Sidebar */}
 
-        <AddSidebar
-          blasterData={blasterData}
-          onChange={handleChangeForm}
-          ammoChange={ammoChange}
-          dateChange={dateChange}
-        />
+        <AddSidebar blasterData={blasterData} onChange={handleChangeForm} ammoChange={ammoChange} dateChange={dateChange} />
 
-      </div>
+      </Box>
+
 
       {/* Submit Button */}
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          size="large"
-          variant="contained"
-          style={{}}
-          onClick={submitBlaster}
-        >
-          Update
-        </Button>
+        <Button size="large" variant="contained" style={{}} onClick={submitBlaster} >Update</Button>
       </div>
-    </div>
+    </div >
+
   );
 }
+
 
 
 

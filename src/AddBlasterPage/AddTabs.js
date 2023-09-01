@@ -1,3 +1,6 @@
+import React, { useRef, useState } from 'react'
+import MUIRichTextEditor from "mui-rte";
+
 import "../App.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -7,8 +10,11 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from '@mui/icons-material/Check';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function AddTabs(props) {
+
   return (<Card className="tabBox">
     <Box sx={{
       borderBottom: 1,
@@ -31,7 +37,7 @@ export default function AddTabs(props) {
 
     {/* Description */}
 
-    {props.currTab === 0 && <AddDescription value={props.currTab} index={0} />}
+    {props.currTab === 0 && <AddDescription value={props.currTab} desc={props.desc} changeDesc={props.changeDesc} index={0} />}
 
     {/* Video Reviews */}
 
@@ -41,21 +47,58 @@ export default function AddTabs(props) {
 
 
 function AddDescription(props) {
+
+  const [saveCheck, setSaveCheck] = useState(false);
+
+  const myTheme = createTheme({
+    // Set up your custom MUI theme here
+  });
+
+  const saveDesc = (data) => {
+    props.changeDesc(data);
+    console.log(data);
+  }
+
+  const ref = useRef(null);
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+
+  const handleClick = async () => {
+    ref.current?.save()
+    setSaveCheck(true)
+    await delay(2000);
+    setSaveCheck(false)
+  }
+
   return (
-    <>
-      <h2>Description:</h2>
-      <TextField multiline sx={{ padding: "16px" }} />
-    </>
+    <Box className="addDesc">
+      <ThemeProvider theme={myTheme}>
+        <MUIRichTextEditor
+          label="Blaster description..."
+          inlineToolbar={true}
+          onSave={saveDesc}
+          defaultValue={props.desc}
+          ref={ref}
+          controls = {["title", "bold", "italic", "underline", "strikethrough", "highlight", "numberList", "bulletList", "quote", "code", "clear"]}
+        />
+      </ThemeProvider>
+      {/* <TextField multiline sx={{ padding: "16px" }} /> */}
+
+      <div style={{  display: "flex", justifyContent: "center", bottom:"0px", position:"absolute", width:"100%" }}>
+        <Button size="large" variant="contained" style={{}} onClick={handleClick} endIcon={saveCheck ? <CheckIcon /> : "" } >Save</Button>
+      </div>
+    </Box>
   );
 }
 
 function VideoReviews(props) {
   return (<div>
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      margin: "15px"
-    }}>
+    <div className="tabBox"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        margin: "15px"
+      }}>
       <TextField id="outlined-required" label="Youtube Key" sx={{
         width: "90%"
       }} value={props.videoKey} onChange={e => props.setVideoKey(e.target.value)} />
