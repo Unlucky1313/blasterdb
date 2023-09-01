@@ -4,24 +4,15 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-import caliburnIcon from "../img/caliburnIcon.png";
-
-import HeroImg from "../HeroImg.js";
-
-import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Link from "@mui/material/Link";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
 
 import AddSidebar from "./AddSidebar";
 import ImageSelector from "../ImageSelector.js";
+import AddImage from "./AddImage.js";
+import AddTabs from "./AddTabs.js";
+import HeroImg from "../HeroImg.js";
+
+import caliburnIcon from "../img/caliburnIcon.png";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -36,15 +27,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
-// firebase.initializeApp({
-//   apiKey: process.env.REACT_APP_apiKey,
-//   authDomain: process.env.REACT_APP_authDomain,
-//   projectId: process.env.REACT_APP_projectId,
-//   storageBucket: process.env.REACT_APP_storageBucket,
-//   messagingSenderId: process.env.REACT_APP_messagingSenderId,
-//   appId: process.env.REACT_APP_appId,
-//   measurementId: process.env.REACT_APP_measurementId,
-// });
 const formReducer = (state, event) => {
   return {
     ...state,
@@ -89,7 +71,7 @@ export default function AddBlaster(props) {
 
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
   const [imageURL, setImageURL] = useState("");
-  const [formData, setFormData] = useReducer(formReducer, initialData);
+  const [blasterData, setBlasterData] = useReducer(formReducer, initialData);
   const [currTab, setCurrTab] = React.useState(0);
   const [videoKey, setVideoKey] = React.useState("");
   const firestore = firebase.firestore();
@@ -110,9 +92,9 @@ export default function AddBlaster(props) {
     if (imageURL !== "") {
       setImageURL("");
 
-      setFormData({
+      setBlasterData({
         name: "imageArray",
-        value: [...formData.imageArray, imageURL],
+        value: [...blasterData.imageArray, imageURL],
       });
     }
   };
@@ -120,45 +102,45 @@ export default function AddBlaster(props) {
   const addVideoUrl = () => {
     if (videoKey !== "") {
       setVideoKey("");
-      setFormData({
+      setBlasterData({
         name: "videoReviews",
-        value: [...formData.videoReviews, youtubeParser(videoKey)],
+        value: [...blasterData.videoReviews, youtubeParser(videoKey)],
       });
     }
   };
 
   function handleChange(newValue) {
-    setFormData({
+    setBlasterData({
       name: "imageArray",
-      value: formData.imageArray.filter((item) => item !== newValue),
+      value: blasterData.imageArray.filter((item) => item !== newValue),
     });
   }
 
   function handleVideoRemove(newValue) {
-    console.timeLog(formData);
-    setFormData({
+    console.timeLog(blasterData);
+    setBlasterData({
       name: "videoReviews",
-      value: formData.videoReviews.filter((item) => item !== newValue),
+      value: blasterData.videoReviews.filter((item) => item !== newValue),
     });
-    console.log(newValue, formData);
+    console.log(newValue, blasterData);
   }
 
   const handleChangeForm = (event) => {
-    setFormData({
+    setBlasterData({
       name: event.target.name,
       value: event.target.value,
     });
   };
 
   const ammoChange = (ammoVal) => {
-    setFormData({
+    setBlasterData({
       name: "ammo",
       value: ammoVal,
     });
   };
 
   const dateChange = (dateVal) => {
-    setFormData({
+    setBlasterData({
       name: "released",
       value: dateVal.format("MM/DD/YYYY"),
     });
@@ -169,133 +151,50 @@ export default function AddBlaster(props) {
   }
 
   const submitBlaster = async (e) => {
-    await firestore.collection("blasters").add(formData);
+    await firestore.collection("blasters").add(blasterData);
 
-    setFormData(initialData);
+    setBlasterData(initialData);
   };
 
   return (
     <div className="App">
       <div className="main">
+
+
+        {/* Sidebar */}
+
         <AddSidebar
-          blasterData={formData}
+          blasterData={blasterData}
           onChange={handleChangeForm}
           ammoChange={ammoChange}
           dateChange={dateChange}
         />
+
+        {/* Main Image */}
+
         <div className="imageContainer">
           <div className="addImage">
             <ImageSelector
-              imageArray={formData.imageArray}
+              imageArray={blasterData.imageArray}
               onChange={changeHero}
             />
             <HeroImg blasterImage={blasterHero} />
           </div>
         </div>
-        
-        <Card className="addImageCard">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "15px",
-            }}
-          >
-            <TextField
-              id="outlined-required"
-              label="Blaster Image URL"
-              sx={{ width: "90%" }}
-              value={imageURL}
-              onChange={(e) => setImageURL(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              onClick={addURL}
-              size="large"
-              className="addImageButton"
-            >
-              <AddCircleIcon sx={{ paddingRight: "8px" }} />
-              Add
-            </Button>
-          </div>
 
-          {formData.imageArray.map((url) => (
-            <URLItem key={url} url={url} onChange={handleChange} />
-          ))}
-        </Card>
+        {/* Image Add Box */}
 
-        <Card className="tabBox">
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={currTab}
-              onChange={changeTab}
-              aria-label="basic tabs example"
-            >
-              <Tab label="Description" />
-              {/* <Tab label="Other Files/Links" /> */}
-              {/* <Tab label="Images" /> */}
-              <Tab label="Video Reviews" />
-              {/* <Tab label="Reviews" /> */}
-            </Tabs>
-          </Box>
-          {currTab === 0 && (
-            <AddDescription value={currTab} index={0}>
-              Item One
-            </AddDescription>
-          )}
-          {currTab === 3 && (
-            <AddDescription value={currTab} index={1}>
-              Item Two
-            </AddDescription>
-          )}
-          {currTab === 2 && <HeroImg index={2}>Item Three</HeroImg>}
-          {currTab === 1 && (
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "15px",
-                }}
-              >
-                <TextField
-                  id="outlined-required"
-                  label="Youtube Key"
-                  sx={{ width: "90%" }}
-                  value={videoKey}
-                  onChange={(e) => setVideoKey(e.target.value)}
-                />
-                <Button
-                  variant="contained"
-                  onClick={addVideoUrl}
-                  size="large"
-                  className="addImageButton"
-                >
-                  <AddCircleIcon sx={{ paddingRight: "8px" }} />
-                  Add
-                </Button>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  maxHeight: "650px",
-                  overflow: "auto",
-                }}
-              >
-                {formData.videoReviews.map((url) => (
-                  <VideoEmbed
-                    key={url}
-                    url={url}
-                    onChange={handleVideoRemove}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </Card>
+        <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
+
+        {/* Tab Box */}
+
+        <AddTabs videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
+
+
       </div>
+
+      {/* Submit Button */}
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button
           size="large"
@@ -303,77 +202,10 @@ export default function AddBlaster(props) {
           style={{}}
           onClick={submitBlaster}
         >
-          Submit
+          Update
         </Button>
       </div>
     </div>
   );
 }
 
-function AddDescription(props) {
-  return (
-    <>
-      <h2>Description:</h2>
-      <TextField multiline sx={{ padding: "16px" }} />
-    </>
-  );
-}
-
-function URLItem(props) {
-  function removeURL(event) {
-    // Here, we invoke the callback with the new value
-    props.onChange(props.url);
-    return <></>;
-  }
-  return (
-    <div
-      style={{
-        margin: "12px",
-        textAlign: "left",
-        display: "flex",
-        overflow: "auto",
-      }}
-    >
-      <CloseIcon sx={{ paddingRight: "8px" }} onClick={removeURL} />
-      <Link href={props.url} target="_blank">
-        {props.url.substring(0, 35) + " •••"}
-      </Link>
-    </div>
-  );
-}
-
-function VideoEmbed(props) {
-  function removeURL(event) {
-    // Here, we invoke the callback with the new value
-    props.onChange(props.url);
-    return <></>;
-  }
-  return (
-    <div
-      style={{
-        margin: "12px",
-        textAlign: "left",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <iframe
-        width="336"
-        height="188"
-        src={"https://www.youtube.com/embed/" + props.url}
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen="allowfullscreen"
-        mozallowfullscreen="mozallowfullscreen"
-        msallowfullscreen="msallowfullscreen"
-        oallowfullscreen="oallowfullscreen"
-        webkitallowfullscreen="webkitallowfullscreen"
-      ></iframe>
-      <Button variant="contained" sx={{ margin: "8px" }} onClick={removeURL}>
-        <CloseIcon sx={{ paddingRight: "8px" }} />
-        Remove
-      </Button>
-    </div>
-  );
-}
