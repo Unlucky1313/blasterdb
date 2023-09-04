@@ -7,6 +7,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { NavLink } from "react-router-dom";
 import { setDoc } from "firebase/firestore";
 
+import SearchIcon from '@mui/icons-material/Search';
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
@@ -25,16 +27,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
-// firebase.initializeApp({
-//   apiKey: process.env.REACT_APP_apiKey,
-//   authDomain: process.env.REACT_APP_authDomain,
-//   projectId: process.env.REACT_APP_projectId,
-//   storageBucket: process.env.REACT_APP_storageBucket,
-//   messagingSenderId: process.env.REACT_APP_messagingSenderId,
-//   appId: process.env.REACT_APP_appId,
-//   measurementId: process.env.REACT_APP_measurementId,
-// });
-
 const auth = firebase.auth();
 
 export default function Header(props) {
@@ -51,8 +43,11 @@ export default function Header(props) {
       </NavLink>
 
       <div className="sideHead">
+        <NavLink className="navLink" to="/search">
+          <SearchIcon />Search
+        </NavLink>
         <NavLink className="navLink" to="/add">
-        <AddCircleIcon /> Add
+          <AddCircleIcon /> Add
         </NavLink>
         <section className="profile">
           {user ? (

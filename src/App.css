@@ -110,7 +110,6 @@ body {
   flex-direction: column;
   flex-grow: 0;
   flex-shrink: 0;
-  margin:
 }
 
 .imageSmall {
@@ -125,6 +124,14 @@ body {
   flex-direction: row;
   justify-content: flex-end;
   width: 100%;
+  gap:4px;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: [image] 128px [name] 2fr [creator] 1fr [propulsion] 80px [fps] 120px [links] 120px [actions] 300px;
+  width: calc(100%-24px);
+  margin: 12px;
 }
 
 .cardHolder {
@@ -188,7 +195,7 @@ body {
 
 .description {
   padding: 12px;
-  min-height:50px;
+  min-height: 50px;
 }
 
 .tabBox {

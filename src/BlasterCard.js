@@ -10,6 +10,8 @@ import "firebase/compat/firestore";
 import firebase from "firebase/compat/app";
 import { doc, getDoc } from "firebase/firestore";
 import BlasterActions from "./BlasterActions";
+import { storage } from "./useFirebase";
+import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
 export default function BlasterCard(props) {
   const [blasterData, setBlasterData] = useState([]);
@@ -18,6 +20,17 @@ export default function BlasterCard(props) {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", props.blaster);
       const docSnap = await getDoc(docRef);
+
+      const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
+      getDownloadURL(resizedRef).then((url) => {
+        setBlasterData({
+          ...docSnap.data(),
+          id: props.blaster,
+          cardImg: url,
+        });
+
+      });
+
       setBlasterData({
         ...docSnap.data(),
         id: props.blaster,
@@ -93,8 +106,9 @@ function DescriptionGenerator(props) {
     fpsStr += props.blasterData.fpsLow;
   }
   if (props.blasterData.fpsHigh) {
-    fpsStr += "-" + props.blasterData.fpsHigh + " ";
+    fpsStr += "-" + props.blasterData.fpsHigh;
   }
+  fpsStr += " ";
 
   return (
     <>

@@ -6,6 +6,8 @@ import "firebase/compat/firestore";
 
 import caliburnIcon from "./img/caliburnIcon.png";
 import { doc, getDoc } from "firebase/firestore";
+import { storage } from "./useFirebase";
+import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
 import ImageSelector from "./ImageSelector.js";
 import HeroImg from "./HeroImg.js";
@@ -52,28 +54,31 @@ function BlasterPage(props) {
   const [blasterData, setBlasterData] = useState([]);
   const [currTab, setCurrTab] = React.useState(0);
 
-  console.log(process.env.REACT_APP_API_KEY);
-
   const changeTab = (event, newValue) => {
     setCurrTab(newValue);
   };
 
   const [searchParams] = useSearchParams();
   const blaster = searchParams.get("blaster");
-  console.log(blaster);
 
   useEffect(() => {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
       setBlasterData({ ...docSnap.data(), id: blaster });
-      setBlasterHero(docSnap.data().imageArray[0]);
+      if (docSnap.data().imageArray) {
+        const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
+        getDownloadURL(resizedRef).then((url) => {
+          setBlasterHero(url);
+          console.log(url);
+        });
+      }
     };
     getData();
   }, [blaster]);
 
   function handleChange(newValue) {
-    setBlasterHero(newValue);
+    setBlasterHero(newValue.replace('_256x144', '_1440x810'));
   }
 
   return (

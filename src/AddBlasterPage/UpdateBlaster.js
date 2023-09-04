@@ -5,6 +5,8 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { useSearchParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
+import { storage } from "../useFirebase";
+import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
 import caliburnIcon from "../img/caliburnIcon.png";
 
@@ -57,9 +59,11 @@ export default function UpdateBlaster(props) {
       rockets: false,
     },
     blasterName: "",
+    construction: "",
     creator: "",
     desc: "",
     diff: "",
+    feed: "",
     files: "",
     fpsHigh: "",
     fpsLow: "",
@@ -67,6 +71,7 @@ export default function UpdateBlaster(props) {
     kit: "",
     propulsion: "",
     released: dayjs().format("MM/DD/YYYY"),
+    rof: "",
     store: "",
     videoReviews: [
     ],
@@ -87,7 +92,13 @@ export default function UpdateBlaster(props) {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
       setBlasterData({ type: 'updateAll', object: docSnap.data(), id: blaster });
-      setBlasterHero(docSnap.data().imageArray[0]);
+      // setBlasterHero(docSnap.data().imageArray[0]);
+
+      const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
+      console.log(getDownloadURL(resizedRef).then((url) => {
+        setBlasterHero(url);
+        console.log(url);
+      }));
 
       console.log(docSnap.data())
     };
@@ -187,6 +198,8 @@ export default function UpdateBlaster(props) {
       console.log("Document successfully updated!");
     });
 
+    alert("Blaster Updated!");
+
   };
 
   return (
@@ -226,7 +239,8 @@ export default function UpdateBlaster(props) {
       {/* Submit Button */}
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button size="large" variant="contained" style={{}} onClick={submitBlaster} >Update</Button>
+        <Button size="large" variant="contained" style={{}} onClick={submitBlaster} sx={{margin:"8px"}} >Update</Button>
+        <Button size="large" variant="contained" style={{}} href={"./blaster?blaster=" + blasterData.id} sx={{margin:"8px"}} >Return</Button>
       </div>
     </div >
 

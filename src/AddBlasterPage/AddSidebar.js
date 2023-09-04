@@ -14,6 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
 import Grid from "@mui/material/Grid";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Tooltip from '@mui/material/Tooltip';
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -87,6 +89,9 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
           />
         </LocalizationProvider>
         <Divider />
+
+        {/* Propulsion */}
+
         <FormControl>
           <InputLabel id="demo-simple-select-label">Propulsion</InputLabel>
           <Select
@@ -98,14 +103,87 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
             name="propulsion"
             sx={{ textAlign: "left" }}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
+            <MenuItem value="">None</MenuItem>
             <MenuItem value={"Springer"}>Springer</MenuItem>
             <MenuItem value={"Flywheeler"}>Flywheeler</MenuItem>
             <MenuItem value={"Stringer"}>Stringer</MenuItem>
+            <MenuItem value={"HPA"}>HPA
+              <Tooltip title="Blasters that use a high pressure airtank to refuel a secondary firing tank" placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
+            <MenuItem value={"LPA"}>LPA
+              <Tooltip title="Blasters that use an airtank that is refilled on each fire" placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
           </Select>
         </FormControl>
+
+        {/* Rate of Fire */}
+
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Rate of Fire</InputLabel>
+          <Select
+            value={blasterData.rof}
+            label="Rate of Fire"
+            onChange={dataChange}
+            name="rof"
+            sx={{ textAlign: "left" }}
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value={"Prime to Fire"}>Prime to Fire</MenuItem>
+            <MenuItem value={"Slamfire"}>Slamfire</MenuItem>
+            <MenuItem value={"Semi Auto"}>Semi Auto</MenuItem>
+            <MenuItem value={"Semi Auto"}>Full Auto</MenuItem>
+            <MenuItem value={"Select Fire"}>Select Fire</MenuItem>
+          </Select>
+        </FormControl>
+
+                {/* Feed Type */}
+
+                <FormControl>
+          <InputLabel id="demo-simple-select-label">Feed Type</InputLabel>
+          <Select
+            value={blasterData.feed}
+            label="Feed Type"
+            onChange={dataChange}
+            name="feed"
+            sx={{ textAlign: "left" }}
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value={"Magazine"}>Magazine</MenuItem>
+            <MenuItem value={"Cylinder"}>Cylinder</MenuItem>
+            <MenuItem value={"Internal Clip"}>Internal Clip</MenuItem>
+            <MenuItem value={"Hopper"}>Hopper</MenuItem>
+            <MenuItem value={"Front Load"}>Front Load</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Construction Type */}
+
+        <FormControl>
+          <InputLabel id="diffSelectLabel">Construction Type</InputLabel>
+          <Select
+            labelId="diffSelectLabel"
+            id="constructionSelect"
+            value={blasterData.construction}
+            label="Construction Type"
+            onChange={dataChange}
+            name="construction"
+            sx={{ textAlign: "left" }}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={"3D Printed"}>3D Printed</MenuItem>
+            <MenuItem value={"Injection Molded"}>Injection Molded</MenuItem>
+            <MenuItem value={"Metal"}>Metal</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Difficulty of Build */}
+
         <FormControl>
           <InputLabel id="diffSelectLabel">Difficulty of Build</InputLabel>
           <Select
@@ -120,6 +198,7 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
+            <MenuItem value={"No Build Needed"}>No Build Needed</MenuItem>
             <MenuItem value={"Very Easy"}>Very Easy</MenuItem>
             <MenuItem value={"Easy"}>Easy</MenuItem>
             <MenuItem value={"Medium"}>Medium</MenuItem>

@@ -70,7 +70,18 @@ const collectedAdd = (e) => {
   return (
     <div className="blasterActions">
           <Button
+            // sx={{maxHeight: "30px"}}
+            color = "warning"
+            size="small"
+            variant="contained"
+            href={"./update?blaster=" + props.blasterData.id}
+          >
+            Update
+          </Button>
+
+          <Button
             color={wishClicked ? "success" : "primary"}
+            size="small"
             variant="contained"
             startIcon={wishClicked ? <CheckCircleIcon /> : <AddCircleIcon />}
             onClick={wishlistAdd}
@@ -78,9 +89,11 @@ const collectedAdd = (e) => {
           >
             Wishlist
           </Button>
+
           <Button
             color={collClicked ? "success" : "secondary"}
             variant="contained"
+            size="small"
             startIcon={collClicked ? <CheckCircleIcon /> : <AddCircleIcon />}
             onClick={collectedAdd}
           >

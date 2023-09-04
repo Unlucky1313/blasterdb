@@ -7,6 +7,7 @@ import Header from "./Header.js";
 // import Footer from "./Footer.js";
 import BlasterPage from "./BlasterPage.js";
 import Home from "./Home.js";
+import Search from "./Search.js";
 import AddBlaster from "./AddBlasterPage/AddBlaster.js";
 import UpdateBlaster from "./AddBlasterPage/UpdateBlaster.js";
 
@@ -25,6 +26,7 @@ function App() {
       <Header onChange={gotUser} />
       <Routes>
         <Route path="/" element={<Home user={user} />} />
+        <Route path="/search" element={<Search user={user} />} />
         <Route path="/blaster" element={<BlasterPage />} />
         <Route path="/add" element={<AddBlaster />} />
         <Route path="/update" element={<UpdateBlaster />} />

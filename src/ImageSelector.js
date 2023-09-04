@@ -12,6 +12,9 @@ export default function ImageSelector(props) {
     // Here, we invoke the callback with the new value
     props.onChange(url);
   }
+
+  console.log(props.imageArray);
+
   return (
     <Card className="imagesMain coolScroll" sx={{ overflow: 'auto' }}>
       <List className="flexList coolScroll"
@@ -37,20 +40,13 @@ function ImageSelectorGen(props) {
   }
 
   const resizedRef = storageRef(storage, `images/${props.imageSrc}_256x144`);
-  console.log(getDownloadURL(resizedRef).then((url) => {
+  getDownloadURL(resizedRef).then((url) => {
     setImageURL(url);
-    console.log(url);
-  }));
+  });
 
   return (
     <ListItem>
-      <img src={imageURL} className="imageSmall" onClick={handleImgClick} alt="Blaster Selector" />
+      <img src={imageURL} className="imageSmall" onClick={handleImgClick} alt="Fetching..." />
     </ListItem>
   );
 }
-
-// const handleImgClick = event => {
-//   console.log(event.target.src);
-//   setBlasterHero(event.target.src)
-//   console.log('Image clicked');
-// };
