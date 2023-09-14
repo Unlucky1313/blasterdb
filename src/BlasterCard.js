@@ -105,7 +105,7 @@ function DescriptionGenerator(props) {
   if (props.blasterData.fpsLow) {
     fpsStr += props.blasterData.fpsLow;
   }
-  if (props.blasterData.fpsHigh) {
+  if (props.blasterData.fpsHigh && props.blasterData.fpsHigh !== props.blasterData.fpsLow) {
     fpsStr += "-" + props.blasterData.fpsHigh;
   }
   fpsStr += " ";

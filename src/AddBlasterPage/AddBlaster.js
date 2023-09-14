@@ -54,8 +54,8 @@ export default function AddBlaster(props) {
     diff: "",
     feed: "",
     files: "",
-    fpsHigh: "",
-    fpsLow: "",
+    fpsHigh: 0,
+    fpsLow: 0,
     imageArray: [],
     kit: "",
     propulsion: "",
@@ -63,13 +63,6 @@ export default function AddBlaster(props) {
     rof: "",
     store: "",
     videoReviews: [
-      // "QACMgWdX3F0",
-      // "KM0dlJgzKDU",
-      // "sHJ-V7fBj9Y",
-      // "r4talAJ0Hvc",
-      // "Sda41hBQYQ0",
-      // "PoXcMbweu7o",
-      // "6AXgDoRcPlM",
     ],
   };
 
@@ -154,7 +147,21 @@ export default function AddBlaster(props) {
     setBlasterHero(newValue);
   }
 
+  const changeDesc = (desc) => {
+    setBlasterData({
+      name: "desc",
+      value: desc,
+    });
+
+    console.log(desc);
+  };
+
   const submitBlaster = async (e) => {
+
+    if(blasterData.fpsHigh === 0){
+      blasterData.fpsHigh = blasterData.fpsLow;
+    }
+
     await firestore.collection("blasters").add(blasterData);
 
     setBlasterData(initialData);
@@ -179,13 +186,13 @@ export default function AddBlaster(props) {
 
           {/* Image Add Box */}
 
-          <AddImage imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
+          <AddImage changeHero={changeHero} imageURL={imageURL} setImageURL={setImageURL} imageArray={blasterData.imageArray} addURL={addURL} handleChange={handleChange}></AddImage>
 
         </Box>
         
         {/* Tab Box */}
 
-        <AddTabs desc={blasterData.desc} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
+        <AddTabs desc={blasterData.desc} changeDesc={changeDesc} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
 
         {/* Sidebar */}
 

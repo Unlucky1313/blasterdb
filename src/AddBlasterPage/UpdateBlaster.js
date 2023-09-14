@@ -65,8 +65,8 @@ export default function UpdateBlaster(props) {
     diff: "",
     feed: "",
     files: "",
-    fpsHigh: "",
-    fpsLow: "",
+    fpsHigh: 0,
+    fpsLow: 0,
     imageArray: [],
     kit: "",
     propulsion: "",
@@ -192,6 +192,10 @@ export default function UpdateBlaster(props) {
   }
 
   const submitBlaster = async (e) => {
+    if(blasterData.fpsHigh === 0){
+      blasterData.fpsHigh = blasterData.fpsLow;
+    }
+
     await firestore.collection("blasters").doc(blasterData.id).update({ ...blasterData }).then(function () {
       console.log("Document successfully updated!");
     }).then(function () {

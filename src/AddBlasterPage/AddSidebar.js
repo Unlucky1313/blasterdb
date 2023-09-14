@@ -135,7 +135,7 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
             <MenuItem value={"Prime to Fire"}>Prime to Fire</MenuItem>
             <MenuItem value={"Slamfire"}>Slamfire</MenuItem>
             <MenuItem value={"Semi Auto"}>Semi Auto</MenuItem>
-            <MenuItem value={"Semi Auto"}>Full Auto</MenuItem>
+            <MenuItem value={"Full Auto"}>Full Auto</MenuItem>
             <MenuItem value={"Select Fire"}>Select Fire</MenuItem>
           </Select>
         </FormControl>
@@ -222,6 +222,7 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
                 <TextField
                   id="outlined-helperText"
                   label="Min FPS"
+                  type="number"
                   onChange={dataChange}
                   name="fpsLow"
                   value={blasterData.fpsLow}
@@ -231,6 +232,7 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
                 <TextField
                   id="outlined-helperText"
                   label="Max FPS"
+                  type="number"
                   helperText="Only if FPS is variable"
                   onChange={dataChange}
                   name="fpsHigh"
