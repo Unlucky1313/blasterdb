@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
@@ -82,12 +83,14 @@ function Profile() {
   return (
     auth.currentUser && (
       <>
+      <Link href="./profile">
         <Avatar
           src={
             photoURL ||
             "https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg"
           }
         />
+        </Link>
         <Button
           variant="contained"
           onClick={() => auth.signOut()}

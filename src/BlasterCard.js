@@ -10,6 +10,7 @@ import "firebase/compat/firestore";
 import firebase from "firebase/compat/app";
 import { doc, getDoc } from "firebase/firestore";
 import BlasterActions from "./BlasterActions";
+import BlasterLinks from "./BlasterLinks";
 import { storage } from "./useFirebase";
 import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
@@ -54,6 +55,7 @@ export default function BlasterCard(props) {
             sx={{ height: "183px" }}
             className="blasterCardMedia"
           />
+          
         </div>
 
 
@@ -86,6 +88,10 @@ export default function BlasterCard(props) {
           >
             <DescriptionGenerator blasterData={blasterData} />
           </Typography>
+          <div style = {{position:"absolute", right:"12px", bottom:"0px"}}>
+          <BlasterLinks hit={blasterData}/>
+          </div>
+          {/* <BlasterLinks hit={hit}></BlasterLinks> */}
         </CardContent>
       </CardActionArea>
 
