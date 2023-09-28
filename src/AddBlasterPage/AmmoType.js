@@ -63,9 +63,11 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.half}
                       onChange={dataChange}
                       name="half"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="Half Length Darts"
+                  
+                  label={<h5 style={{fontSize:"13px", fontWeight: 500, margin: "0px"}}>Half Length Darts</h5>}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -75,9 +77,10 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.full}
                       onChange={dataChange}
                       name="full"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="Full length Darts"
+                  label={<h5 style={{fontSize:"15px", fontWeight: 500, margin: "0px"}}>Full Length Darts</h5>}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -87,9 +90,10 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.rival}
                       onChange={dataChange}
                       name="rival"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="Rival"
+                  label={<h5 style={{fontSize:"13px", fontWeight: 500, margin: "0px"}}>Rival</h5>}
                 />
               </Grid>
             </Grid>
@@ -108,9 +112,10 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.mega}
                       onChange={dataChange}
                       name="mega"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="Mega Darts"
+                  label={<h5 style={{fontSize:"13px", fontWeight: 500, margin: "0px"}}>Mega Darts</h5>}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -120,9 +125,10 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.megaXL}
                       onChange={dataChange}
                       name="megaXL"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="MegaXL Darts"
+                  label={<h5 style={{fontSize:"13px", fontWeight: 500, margin: "0px"}}>MegaXL Darts</h5>}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -132,9 +138,10 @@ export default function AmmoType({ ammo, onChange }) {
                       checked={ammo.rockets}
                       onChange={dataChange}
                       name="rockets"
+                      sx={{padding: "4px"}}
                     />
                   }
-                  label="Rockets"
+                  label={<h5 style={{fontSize:"13px", fontWeight: 500, margin: "0px"}}>Rockets</h5>}
                 />
               </Grid>
             </Grid>

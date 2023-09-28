@@ -7,6 +7,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Tooltip from '@mui/material/Tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import Box from "@mui/material/Box";
+import Snackbar from '@mui/material/Snackbar';
+import SnackbarContent from '@mui/material/SnackbarContent';
 
 import { getDownloadURL, ref as storageRef, uploadBytes, } from "firebase/storage";
 import React, { useState } from "react";
@@ -16,6 +18,19 @@ export default function AddImage(props) {
 
   const [imageUpload, setImageUpload] = useState(null);
   const [fileCheck, setFileCheck] = useState(false);
+  const [uploadAlert, setUploadAlert] = React.useState(false);
+
+  const handleUploadClick = () => {
+    setUploadAlert(true);
+  };
+
+  const handleUploadClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setUploadAlert(false);
+  };
 
   const uploadImage = () => {
     if (imageUpload == null) return;
@@ -23,13 +38,17 @@ export default function AddImage(props) {
     const imgName = uuidv4();
     const imageRef = storageRef(storage, `images/${imgName}`);
 
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+    uploadBytes(imageRef, imageUpload).then(async (snapshot) => {
 
       setFileCheck(false);
 
+      handleUploadClick();
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(2000);
       props.addURL(imgName);
 
-      alert("Image Uploaded");
+      console.log(props);
     })
   }
 
@@ -76,6 +95,17 @@ export default function AddImage(props) {
     <Box style={{ display: "flex", flexWrap: "wrap" }}>
       {props.imageArray.map(url => <URLItem key={url} url={url} onChange={props.handleChange} />)}
     </Box>
+    <Snackbar
+      open={uploadAlert}
+      onClose={handleUploadClose}
+      autoHideDuration={2000}
+    >
+      <SnackbarContent style={{
+        backgroundColor: 'green',
+      }}
+        message="Image Uploaded!"
+      />
+    </Snackbar>
   </Card>);
 }
 

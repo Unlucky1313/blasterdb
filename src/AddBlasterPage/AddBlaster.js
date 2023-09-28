@@ -36,7 +36,6 @@ const formReducer = (state, event) => {
 };
 
 export default function AddBlaster(props) {
-  const dayjs = require("dayjs");
 
   const initialData = {
     ammo: {
@@ -59,8 +58,9 @@ export default function AddBlaster(props) {
     imageArray: [],
     kit: "",
     propulsion: "",
-    released: dayjs().format("MM/DD/YYYY"),
+    released: new Date(),
     rof: "",
+    shortDesc: "",
     store: "",
     videoReviews: [
     ],
@@ -85,13 +85,16 @@ export default function AddBlaster(props) {
     return match && match[7].length === 11 ? match[7] : false;
   }
 
-  const addURL = () => {
-    if (imageURL !== "") {
+  const addURL = (url) => {
+
+    console.log(url);
+
+    if (url !== "") {
       setImageURL("");
 
       setBlasterData({
         name: "imageArray",
-        value: [...blasterData.imageArray, imageURL],
+        value: [...blasterData.imageArray, url],
       });
     }
   };
@@ -162,9 +165,25 @@ export default function AddBlaster(props) {
       blasterData.fpsHigh = blasterData.fpsLow;
     }
 
+    blasterData.fpsHigh = Number(blasterData.fpsHigh);
+    blasterData.fpsLow = Number(blasterData.fpsLow);
+
+    if(blasterData.kit){blasterData.kitBool=true}else{blasterData.kitBool=false}
+    if(blasterData.store){blasterData.storeBool=true}else{blasterData.storeBool=false}
+    if(blasterData.files){blasterData.filesBool=true}else{blasterData.filesBool=false}
+
+    const dateData = new Date(blasterData.released);
+    blasterData.released = firebase.firestore.Timestamp.fromDate(dateData);
+
+    delete blasterData.undefined;
+
+    console.log(blasterData);
+
     await firestore.collection("blasters").add(blasterData);
 
     setBlasterData(initialData);
+  
+    alert("Blaster Added!");
   };
 
   return (

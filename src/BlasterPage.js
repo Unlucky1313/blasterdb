@@ -33,26 +33,13 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
-// firebase.initializeApp({
-//   apiKey: process.env.REACT_APP_apiKey,
-//   authDomain: process.env.REACT_APP_authDomain,
-//   projectId: process.env.REACT_APP_projectId,
-//   storageBucket: process.env.REACT_APP_storageBucket,
-//   messagingSenderId: process.env.REACT_APP_messagingSenderId,
-//   appId: process.env.REACT_APP_appId,
-//   measurementId: process.env.REACT_APP_measurementId,
-// });
-
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: "dark",
-//   },
-// });
 
 function BlasterPage(props) {
   const [blasterHero, setBlasterHero] = useState(caliburnIcon);
   const [blasterData, setBlasterData] = useState([]);
   const [currTab, setCurrTab] = React.useState(0);
+
+  console.log(blasterData)
 
   const changeTab = (event, newValue) => {
     setCurrTab(newValue);
@@ -65,7 +52,8 @@ function BlasterPage(props) {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
-      setBlasterData({ ...docSnap.data(), id: blaster });
+      const dateData = new Date(docSnap.data().released.seconds * 1000);  //Convert Timestamp to String
+      setBlasterData({ ...docSnap.data(), id: blaster, released: dateData });
       if (docSnap.data().imageArray) {
         const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
         getDownloadURL(resizedRef).then((url) => {

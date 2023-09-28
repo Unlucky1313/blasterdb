@@ -39,7 +39,7 @@ export default function Header(props) {
   return (
     <header className="App-header">
       <NavLink className="title" to="/">
-        BlasterDB
+        BlasterBrowser
       </NavLink>
 
       <div className="sideHead">

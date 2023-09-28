@@ -5,6 +5,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 import Card from "@mui/material/Card";
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
@@ -15,6 +16,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormGroup from "@mui/material/FormGroup";
 import Grid from "@mui/material/Grid";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import InputAdornment from '@mui/material/InputAdornment';
 import Tooltip from '@mui/material/Tooltip';
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -74,11 +76,21 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
         />
         <TextField
           id="outlined-required"
+          label="Short Description (40 Characters)"
+          onChange={dataChange}
+          name="shortDesc"
+          value={blasterData.shortDesc}
+          inputProps={{ maxLength: 40 }}
+        />
+        <TextField
+          id="outlined-required"
           label="Creator"
           onChange={dataChange}
           name="creator"
           value={blasterData.creator}
         />
+
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Release Date"
@@ -140,9 +152,9 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
           </Select>
         </FormControl>
 
-                {/* Feed Type */}
+        {/* Feed Type */}
 
-                <FormControl>
+        <FormControl>
           <InputLabel id="demo-simple-select-label">Feed Type</InputLabel>
           <Select
             value={blasterData.feed}
@@ -247,30 +259,78 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
 
         <Divider />
 
-        <TextField
-          id="outlined-required"
-          label="Store"
-          size="small"
-          onChange={dataChange}
-          name="store"
-          value={blasterData.store}
-        />
-        <TextField
-          id="outlined-required"
-          label="Kit"
-          size="small"
-          onChange={dataChange}
-          name="kit"
-          value={blasterData.kit}
-        />
-        <TextField
-          id="outlined-required"
-          label="Files"
-          size="small"
-          onChange={dataChange}
-          name="files"
-          value={blasterData.files}
-        />
+        <Box sx={{ display: "flex" }}>
+          <TextField
+            id="outlined-required"
+            label="Store"
+            size="small"
+            onChange={dataChange}
+            name="store"
+            value={blasterData.store}
+            sx={{ flexGrow: "3", marginRight: "20px" }}
+          />
+          <TextField
+            id="outlined-helperText"
+            label="Store Price"
+            type="number"
+            size="small"
+            onChange={dataChange}
+            name="storePrice"
+            value={blasterData.storePrice}
+            sx={{ width: "112px" }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <TextField
+            id="outlined-required"
+            label="Kit"
+            size="small"
+            onChange={dataChange}
+            name="kit"
+            value={blasterData.kit}
+            sx={{ flexGrow: "3", marginRight: "20px" }}
+          />
+          <TextField
+            id="outlined-helperText"
+            label="Kit Price"
+            type="number"
+            size="small"
+            onChange={dataChange}
+            name="kitPrice"
+            value={blasterData.kitPrice}
+            sx={{ width: "112px" }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+          />
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <TextField
+            id="outlined-required"
+            label="Files"
+            size="small"
+            onChange={dataChange}
+            name="files"
+            value={blasterData.files}
+            sx={{ flexGrow: "3", marginRight: "20px" }}
+          />
+          <TextField
+            id="outlined-helperText"
+            label="File Price"
+            type="number"
+            size="small"
+            onChange={dataChange}
+            name="filesPrice"
+            value={blasterData.filesPrice}
+            sx={{ width: "112px" }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+          />
+        </Box>
 
         <Divider />
       </div>

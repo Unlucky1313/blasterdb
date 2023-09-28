@@ -91,7 +91,7 @@ const collectedAdd = (e) => {
           </Button>
 
           <Button
-            color={collClicked ? "success" : "secondary"}
+            color={collClicked ? "success" : "primary"}
             variant="contained"
             size="small"
             startIcon={collClicked ? <CheckCircleIcon /> : <AddCircleIcon />}

@@ -5,7 +5,7 @@ import "./App.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { InstantSearch, SearchBox, Hits, Highlight, SortBy, RefinementList } from "react-instantsearch";
+import { InstantSearch, SearchBox, Hits, Highlight, SortBy, RefinementList, ToggleRefinement } from "react-instantsearch";
 import algoliasearch from 'algoliasearch/lite';
 
 
@@ -13,12 +13,9 @@ import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import { storage } from "./useFirebase";
 import { getDownloadURL, ref as storageRef, } from "firebase/storage";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
-import Avatar from "@mui/material/Avatar";
 import Link from "@mui/material/Link";
-import RedeemIcon from "@mui/icons-material/Redeem";
 import BlasterActions from "./BlasterActions";
+import BlasterLinks from "./BlasterLinks";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -44,11 +41,11 @@ export default function Search(props) {
 
         <Card className="searchBox">
           <header className="searchHeader">
-            <h2>Search:</h2>
+            <h2 style={{marginBottom: "0px"}}>Search:</h2>
             <SearchBox translations={{ placeholder: 'Search for Blasters' }} />
           </header>
           <div className="sortContainer">
-            <h2>Sort By:</h2>
+            <h2 style={{marginBottom: "0px"}}>Sort By:</h2>
             <SortBy
               items={[
                 { label: 'Name', value: 'blasters' },
@@ -59,26 +56,44 @@ export default function Search(props) {
             />
           </div>
 
-          <h3>Propulsion</h3>
+          <h3 style={{marginBottom: "0px"}}>Propulsion:</h3>
           <RefinementList attribute="propulsion" />
-          <h3>Rate of Fire</h3>
+          <h3 style={{marginBottom: "0px"}}>Rate of Fire:</h3>
           <RefinementList attribute="rof" />
-          <h3>Feed Type</h3>
-          <RefinementList attribute="feed" />          
-          <h3>Construction Type</h3>
+          <h3 style={{marginBottom: "0px"}}>Feed Type:</h3>
+          <RefinementList attribute="feed" />
+          <h3 style={{marginBottom: "0px"}}>Construction Type:</h3>
           <RefinementList attribute="construction" />
-          <h3>Difficulty of Build</h3>
+          <h3 style={{marginBottom: "0px"}}>Difficulty of Build:</h3>
           <RefinementList attribute="diff" />
+          <h3 style={{marginBottom: "0px"}}>Ammo Types:</h3>
+          <div style={{display:"flex", flexWrap: "wrap", gap: "8px", rowGap: "2px"}}>
+            <ToggleRefinement attribute="ammo.half" label="Half Length" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="ammo.mega" label="Mega" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="ammo.full" label="Full Length" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="ammo.megaXL" label="Mega XL" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="ammo.rival" label="Rival" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="ammo.rockets" label="Rockets" style={{width:"45%"}}/>
+          </div>
+
+          <h3 style={{marginBottom: "0px"}}>Avalibility:</h3>
+          <div style={{display:"flex", flexDirection:"column", flexWrap: "wrap", gap: "8px", rowGap: "2px"}}>
+            <ToggleRefinement attribute="storeBool" label="Store" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="kitBool" label="Kit" style={{width:"45%"}}/>
+            <ToggleRefinement attribute="filesBool" label="Files" style={{width:"45%"}}/>
+          </div>
+
 
         </Card>
 
-        <Hits hitComponent={BlasterDetail} className="hitsContainer"/>
+        <Hits hitComponent={BlasterDetail} className="hitsContainer" />
 
       </InstantSearch>
 
     </Card>
   );
 }
+
 
 function BlasterDetail({ hit }) {
   const [blasterHero, setBlasterHero] = useState();
@@ -95,7 +110,7 @@ function BlasterDetail({ hit }) {
     getData();
   });
 
-  const blasterURL = "./blaster?blaster=" + hit.id;
+  const blasterURL = "./blaster?blaster=" + hit.objectID;
 
   var fpsStr = "";
   if (hit.fpsLow) {
@@ -106,10 +121,17 @@ function BlasterDetail({ hit }) {
   }
   fpsStr += " FPS";
 
+
+
   return (
     <Box className="detailGrid">
-      <a href={blasterURL}><img style={{ width: "128px", aspectRatio: "16/9", objectFit: "cover", gridColumn: "image" }} src={blasterHero} alt="Blaster" /></a>
-      <Link href={blasterURL} underline="hover" color="black"><h2 style={{ marginLeft: "12px", gridColumn: "name" }}><Highlight attribute="blasterName" hit={hit} /></h2></Link>
+      <a href={blasterURL}><img style={{ width: "128px", marginTop: "4px", aspectRatio: "16/9", objectFit: "cover", gridColumn: "image" }} src={blasterHero} alt="Blaster" /></a>
+      <Link href={blasterURL} underline="hover" color="black">
+        <h2 style={{ marginLeft: "12px", marginBottom: "0px", gridColumn: "name" }}>
+          <Highlight attribute="blasterName" hit={hit} />
+        </h2>
+        <h4 style={{ marginLeft: "12px", marginTop: "4px", marginBottom: "0px", gridColumn: "name" }}><Highlight attribute="shortDesc" hit={hit} /></h4>
+      </Link>
 
       <h3 style={{ marginLeft: "12px", gridColumn: "creator", paddingTop: "5px" }}><Highlight attribute="creator" hit={hit} /></h3>
 
@@ -117,26 +139,11 @@ function BlasterDetail({ hit }) {
 
       <h5 style={{ marginLeft: "12px", gridColumn: "fps", textAlign: "center", paddingTop: "5px" }}>{fpsStr}</h5>
 
-      <div style={{ gridColumn: "links", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        {hit.store ? <Link href={hit.store}><Avatar sx={{ width: 30, height: 30, bgcolor: "#3064ad", margin: "4px" }}>
-          <RedeemIcon sx={{ width: "22px" }} />
-        </Avatar></Link>
-          : ""}
-
-        {hit.kit ? <Link href={hit.kit}><Avatar sx={{ width: 30, height: 30, bgcolor: "#3064ad", margin: "4px" }}>
-          <HomeRepairServiceIcon sx={{ width: "22px" }} />
-        </Avatar></Link>
-          : ""}
-
-        {hit.files ? <Link href={hit.files}><Avatar sx={{ width: 30, height: 30, bgcolor: "#3064ad", margin: "4px" }}>
-          <InsertDriveFileIcon sx={{ width: "22px" }} />
-        </Avatar></Link>
-          : ""}
-      </div>
+      <BlasterLinks hit={hit}></BlasterLinks>
 
       <div style={{ gridColumn: "actions", display: "flex", alignItems: "center" }}>
         <BlasterActions blasterData={hit} />
       </div>
-    </Box>
+    </Box >
   );
 }

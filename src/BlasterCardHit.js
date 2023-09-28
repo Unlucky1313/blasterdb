@@ -10,22 +10,23 @@ import "firebase/compat/firestore";
 import firebase from "firebase/compat/app";
 import { doc, getDoc } from "firebase/firestore";
 import BlasterActions from "./BlasterActions";
+import BlasterLinks from "./BlasterLinks";
 import { storage } from "./useFirebase";
 import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
-export default function BlasterCard(props) {
+export default function BlasterCard({ hit }) {
   const [blasterData, setBlasterData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      const docRef = doc(firebase.firestore(), "blasters", props.blaster);
+      const docRef = doc(firebase.firestore(), "blasters", hit.objectID);
       const docSnap = await getDoc(docRef);
 
       const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
       getDownloadURL(resizedRef).then((url) => {
         setBlasterData({
           ...docSnap.data(),
-          id: props.blaster,
+          id: hit.objectID,
           cardImg: url,
         });
 
@@ -33,12 +34,12 @@ export default function BlasterCard(props) {
 
       setBlasterData({
         ...docSnap.data(),
-        id: props.blaster,
+        id: hit.objectID,
         cardImg: docSnap.data().imageArray[0],
       });
     };
     getData();
-  }, [props.blaster]);
+  }, [hit.objectID]);
 
   const blasterURL = "./blaster?blaster=" + blasterData.id;
   console.log(blasterData.id);
@@ -54,6 +55,7 @@ export default function BlasterCard(props) {
             sx={{ height: "183px" }}
             className="blasterCardMedia"
           />
+          
         </div>
 
 
@@ -86,6 +88,10 @@ export default function BlasterCard(props) {
           >
             <DescriptionGenerator blasterData={blasterData} />
           </Typography>
+          <div style = {{position:"absolute", right:"12px", bottom:"0px"}}>
+          <BlasterLinks hit={hit}/>
+          </div>
+          {/* <BlasterLinks hit={hit}></BlasterLinks> */}
         </CardContent>
       </CardActionArea>
 

@@ -36,7 +36,7 @@ if (!firebase.apps.length) {
 const formReducer = (state, event) => {
   switch (event.type) {
     case "updateAll":
-      return { ...state, ...event.object, id: event.id };
+      return { ...state, ...event.object, id: event.id, released: event.released };
     default:
       return {
         ...state,
@@ -47,7 +47,6 @@ const formReducer = (state, event) => {
 
 
 export default function UpdateBlaster(props) {
-  const dayjs = require("dayjs");
 
   const initialData = {
     ammo: {
@@ -65,14 +64,18 @@ export default function UpdateBlaster(props) {
     diff: "",
     feed: "",
     files: "",
+    filesPrice: 0,
     fpsHigh: 0,
     fpsLow: 0,
     imageArray: [],
     kit: "",
+    kitPrice: 0,
     propulsion: "",
-    released: dayjs().format("MM/DD/YYYY"),
+    released: firebase.firestore.Timestamp.fromDate(new Date()),
     rof: "",
+    shortDesc: "",
     store: "",
+    storePrice: 0,
     videoReviews: [
     ],
   };
@@ -91,7 +94,9 @@ export default function UpdateBlaster(props) {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", blaster);
       const docSnap = await getDoc(docRef);
-      setBlasterData({ type: 'updateAll', object: docSnap.data(), id: blaster });
+      const dateData = new Date(docSnap.data().released.seconds * 1000);  //Convert Timestamp to Date
+
+      setBlasterData({ type: 'updateAll', object: docSnap.data(), released: dateData, id: blaster});
       // setBlasterHero(docSnap.data().imageArray[0]);
 
       const resizedRef = storageRef(storage, `images/${docSnap.data().imageArray[0]}_1440x810`);
@@ -100,7 +105,7 @@ export default function UpdateBlaster(props) {
         console.log(url);
       }));
 
-      console.log(docSnap.data())
+      console.log(docSnap.data(), dateData);
     };
     getData();
   }, [blaster]);
@@ -196,7 +201,17 @@ export default function UpdateBlaster(props) {
       blasterData.fpsHigh = blasterData.fpsLow;
     }
 
-    await firestore.collection("blasters").doc(blasterData.id).update({ ...blasterData }).then(function () {
+    blasterData.fpsHigh = Number(blasterData.fpsHigh);
+    blasterData.fpsLow = Number(blasterData.fpsLow);
+    
+    if(blasterData.kit){blasterData.kitBool=true}else{blasterData.kitBool=false}
+    if(blasterData.store){blasterData.storeBool=true}else{blasterData.storeBool=false}
+    if(blasterData.files){blasterData.filesBool=true}else{blasterData.filesBool=false}
+
+    const dateData = new Date(blasterData.released);
+
+
+    await firestore.collection("blasters").doc(blasterData.id).update({ ...blasterData, released: firebase.firestore.Timestamp.fromDate(dateData) }).then(function () {
       console.log("Document successfully updated!");
     }).then(function () {
       console.log("Document successfully updated!");

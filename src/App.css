@@ -142,10 +142,24 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
 }
 
+.searchHome .ais-Hits-list{
+  max-width: 90%;
+  margin: 40px auto;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+}
+
+.searchHome .ais-Hits-list .ais-Hits-item{
+  border-radius: 0px;
+  background: 0;
+  box-shadow: none;
+}
+
 .blasterCardWrapper {
   display: flex;
   flex-direction: column;
-  width: 325px;
+  width: 100%;
   justify-content: flex-start;
   text-align: left;
   justify-self: center;
@@ -398,17 +412,19 @@ button {
 .searchBox{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   gap: 12px;
   max-width: 300px;
   flex-grow: 1;
+  padding: 20px;
 }
 
 /* INPUT */
 .searchHeader {
   height: 80px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  /* align-items: center; */
 }
 
 .ais-SearchBox{
@@ -421,5 +437,17 @@ button {
 
 .sortContainer{
   display: flex;
-  align-items: center;
+  flex-direction: column;
+}
+
+.blasterCardMedia {
+  transition: 0.2s all ease-in-out;
+}
+
+/* .blasterCardMedia:hover {
+  transform: scale(1.1);
+} */
+
+.blasterCardWrapper:hover .blasterCardMedia {
+  transform: scale(1.15);
 }

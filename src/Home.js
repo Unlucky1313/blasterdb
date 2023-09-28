@@ -4,7 +4,10 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-import BlasterCard from "./BlasterCard";
+import { InstantSearch, Hits } from "react-instantsearch";
+import algoliasearch from 'algoliasearch/lite';
+
+import BlasterCardHit from "./BlasterCardHit";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -20,14 +23,30 @@ if (!firebase.apps.length) {
 }
 
 export default function Home(props) {
+
+  const searchClient = algoliasearch(process.env.REACT_APP_ALGOLIA_APP_ID, process.env.REACT_APP_ALGOLIA_SEARCH_KEY);
+
   return (
-    <div className="cardHolder">
-      <BlasterCard user={props.user} blaster={"D0i9KOyqL8fnCFKbcXcq"} />
-      <BlasterCard user={props.user} blaster={"nbPw3IRskYq08w4sxU44"} />
-      <BlasterCard user={props.user} blaster={"5GiHVMHTlcFp6MEbt9EQ"} />
-      <BlasterCard user={props.user} blaster={"J9k2v2vm3gSTpHYyFFzt"} />
-      <BlasterCard user={props.user} blaster={"BCV9lIU2Tk00377fH0A7"} />
-      <BlasterCard user={props.user} blaster={"JTbAIHFbdpS58LB4VxRL"} />
-    </div>
+    <>
+      {/* <div className="cardHolder">
+        <BlasterCard user={props.user} blaster={"D0i9KOyqL8fnCFKbcXcq"} />
+        <BlasterCard user={props.user} blaster={"nbPw3IRskYq08w4sxU44"} />
+        <BlasterCard user={props.user} blaster={"5GiHVMHTlcFp6MEbt9EQ"} />
+        <BlasterCard user={props.user} blaster={"J9k2v2vm3gSTpHYyFFzt"} />
+        <BlasterCard user={props.user} blaster={"BCV9lIU2Tk00377fH0A7"} />
+        <BlasterCard user={props.user} blaster={"JTbAIHFbdpS58LB4VxRL"} />
+        <BlasterCard user={props.user} blaster={"V76RPfOjMw9e9jwDVqXR"} />
+        <BlasterCard user={props.user} blaster={"3znD86UqNYW4ACpfXgQ3"} />
+        <BlasterCard user={props.user} blaster={"B58HaJnrPiISgccZscVM"} />
+
+      </div> */}
+
+      <InstantSearch searchClient={searchClient} indexName="blasters" insights className="cardHolder">
+
+        <Hits hitComponent={BlasterCardHit} className="searchHome"/>
+
+      </InstantSearch>
+    </>
+
   );
 }
