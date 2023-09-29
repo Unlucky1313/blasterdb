@@ -151,6 +151,21 @@ body {
   flex-direction: column;
 }
 
+.profileCard{
+  width: 90%;
+  margin: 24px 0px 0px 5%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profileFields{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .searchHome .ais-Hits-list{
   max-width: 90%;
   margin: 40px auto;

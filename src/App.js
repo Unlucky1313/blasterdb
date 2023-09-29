@@ -11,6 +11,7 @@ import Search from "./Search.js";
 import AddBlaster from "./AddBlasterPage/AddBlaster.js";
 import UpdateBlaster from "./AddBlasterPage/UpdateBlaster.js";
 import Profile from "./Profile.js";
+import FeatureRequest from "./FeatureRequest.js";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/add" element={<AddBlaster />} />
         <Route path="/update" element={<UpdateBlaster />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/features" element={<FeatureRequest />} />
         {/* <Route path='/blogs' element={<Blogs/>} />
           <Route path='/sign-up' element={<SignUp/>} /> */}
       </Routes>

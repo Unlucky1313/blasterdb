@@ -42,7 +42,6 @@ export default function BlasterCard(props) {
   }, [props.blaster]);
 
   const blasterURL = "./blaster?blaster=" + blasterData.id;
-  console.log(blasterData.id);
 
   return (
     <Card className="blasterCardWrapper">

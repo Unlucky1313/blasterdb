@@ -50,6 +50,9 @@ export default function Header(props) {
         <NavLink className="navLink" to="/add">
           <AddCircleIcon /> Add
         </NavLink>
+        <NavLink className="navLink" to="/features">
+          Request A Feature!
+        </NavLink>
         <section className="profile">
           {user ? (
             <>
@@ -107,7 +110,7 @@ function Profile() {
 }
 
 function CheckForUser(props) {
-  const { uid } = auth.currentUser;
+  const { uid, email } = auth.currentUser;
 
   const db = firebase.firestore();
   var docRef = db.collection("users").doc(uid);
@@ -120,7 +123,7 @@ function CheckForUser(props) {
       } else {
         // doc.data() will be undefined in this case
         props.onChange(uid);
-        setDoc(docRef, { collected: [], wishlist: [] });
+        setDoc(docRef, { collected: [], wishlist: [], username: email, role: "User"});
       }
     })
     .catch((error) => {
