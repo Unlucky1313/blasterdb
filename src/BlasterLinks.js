@@ -18,6 +18,13 @@ export default function BlasterLinks(props) {
   if (props.hit.kitPrice === 0 || props.hit.kitPrice === "0") { kitPriceData = "Free" } else { kitPriceData = "$" + props.hit.kitPrice }
   if (props.hit.filesPrice === 0 || props.hit.filesPrice === "0") { filesPriceData = "Free" } else { filesPriceData = "$" + props.hit.filesPrice }
 
+  const linkClicked = ( event, value ) => {
+    if( event.button <= 1 ) {
+      props.conversionClicked(value);
+    }
+  }
+  
+
   return (<div style={{
     gridColumn: "links",
     display: "flex",
@@ -28,7 +35,7 @@ export default function BlasterLinks(props) {
     {props.hit.store ? <Tooltip title={<h2 style={{
       margin: "0px"
     }}>{storePriceData}</h2>} placement="bottom" TransitionComponent={Zoom}>
-      <Link href={props.hit.store}>
+      <Link href={props.hit.store} target="_blank" onMouseDown={(e) => linkClicked(e, "store")}>
         <Avatar sx={{
           width: 30,
           height: 30,
@@ -45,7 +52,7 @@ export default function BlasterLinks(props) {
     {props.hit.kit ? <Tooltip title={<h2 style={{
       margin: "0px"
     }}>{kitPriceData}</h2>} placement="bottom" TransitionComponent={Zoom}>
-      <Link href={props.hit.kit}>
+      <Link href={props.hit.kit} target="_blank" onMouseDown={(e) => linkClicked(e, "kit")}>
         <Avatar sx={{
           width: 30,
           height: 30,
@@ -62,7 +69,7 @@ export default function BlasterLinks(props) {
     {props.hit.files ? <Tooltip title={<h2 style={{
       margin: "0px"
     }}>{filesPriceData}</h2>} placement="bottom" TransitionComponent={Zoom}>
-      <Link href={props.hit.files}>
+      <Link href={props.hit.files} target="_blank" onMouseDown={(e) => linkClicked(e, "files")}>
         <Avatar sx={{
           width: 30,
           height: 30,

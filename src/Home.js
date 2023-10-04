@@ -4,8 +4,9 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-import { InstantSearch, Hits } from "react-instantsearch";
+import { InstantSearch, Hits, Configure } from "react-instantsearch";
 import algoliasearch from 'algoliasearch/lite';
+// import { TrendingItems } from '@algolia/recommend-react';
 
 import BlasterCardHit from "./BlasterCardHit";
 
@@ -41,10 +42,17 @@ export default function Home(props) {
 
       </div> */}
 
-      <InstantSearch searchClient={searchClient} indexName="blasters" insights className="cardHolder">
+      {/* <TrendingItems
+        recommendClient={searchClient}
+        indexName={"blasters"}
+        itemComponent={BlasterCardHit}
+      /> */}
 
-        <Hits hitComponent={BlasterCardHit} className="searchHome"/>
 
+      <InstantSearch searchClient={searchClient} indexName="blasters" insights={true} className="cardHolder">
+
+        <Hits hitComponent={BlasterCardHit} className="searchHome" />
+        <Configure clickAnalytics />
       </InstantSearch>
     </>
 

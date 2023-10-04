@@ -47,6 +47,7 @@ function BlasterPage(props) {
 
   const [searchParams] = useSearchParams();
   const blaster = searchParams.get("blaster");
+  const queryID = searchParams.get("queryID");
 
   useEffect(() => {
     const getData = async () => {
@@ -72,7 +73,7 @@ function BlasterPage(props) {
   return (
     <div className="App">
       <Box className='gridMain' sx={{ justifyContent: 'center' }}>
-        <Sidebar blasterData={blasterData} />
+        <Sidebar blasterData={blasterData} queryID={queryID} />
 
 
         <Box className="imgBox">

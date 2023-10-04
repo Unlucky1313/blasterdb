@@ -12,6 +12,7 @@ import Tabs from "@mui/material/Tabs";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from '@mui/icons-material/Check';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { convertToRaw } from 'draft-js'
 
 export default function AddTabs(props) {
 
@@ -49,6 +50,7 @@ export default function AddTabs(props) {
 function AddDescription(props) {
 
   const [saveCheck, setSaveCheck] = useState(false);
+  const [descTest, setDescTest] = useState(false);
 
   const myTheme = createTheme({
     // Set up your custom MUI theme here
@@ -70,6 +72,14 @@ function AddDescription(props) {
     setSaveCheck(false)
   }
 
+  const descChange = event => {
+    const plainText = event.getCurrentContent().getPlainText() // for plain text
+    console.log(plainText);
+    const rteContent = convertToRaw(event.getCurrentContent()) // for rte content with text formating
+    rteContent && setDescTest(JSON.stringify(rteContent)) // store your rteContent to state
+    console.log(descTest);
+  }
+
   return (
     <Box className="addDesc">
       <ThemeProvider theme={myTheme}>
@@ -79,6 +89,7 @@ function AddDescription(props) {
           onSave={saveDesc}
           defaultValue={props.desc}
           ref={ref}
+          onChange={descChange}
           controls = {["title", "bold", "italic", "underline", "strikethrough", "highlight", "numberList", "bulletList", "quote", "code", "clear"]}
         />
       </ThemeProvider>

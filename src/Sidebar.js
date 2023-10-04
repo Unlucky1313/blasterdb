@@ -9,6 +9,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import BlasterActions from "./BlasterActions";
+import aa from "search-insights";
 
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
@@ -190,6 +191,7 @@ export default function Sidebar(props) {
         <ListItem>
           <BlasterLinks
             blasterData={props.blasterData}
+            queryID={props.queryID}
           />
         </ListItem>
         <ListItem style={{ marginTop: "30px" }}>
@@ -210,6 +212,44 @@ function BlasterLinks(props) {
   if (props.blasterData.kitPrice === 0 || props.blasterData.kitPrice === "0") { kitPriceData = "Free" } else { kitPriceData = "$" + props.blasterData.kitPrice }
   if (props.blasterData.filesPrice === 0 || props.blasterData.filesPrice === "0") { filesPriceData = "Free" } else { filesPriceData = "$" + props.blasterData.filesPrice }
 
+  aa('init', {
+    appId: process.env.REACT_APP_ALGOLIA_APP_ID,
+    apiKey: process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
+    useCookie: true,
+  });
+
+  var token = "";
+
+  aa('getUserToken', {}, (err, userToken) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    token = userToken;
+    console.log(userToken);
+  });
+
+  const linkClicked = (event, value) => {
+    if (event.button <= 1) {
+      if (props.queryID) {
+        aa('convertedObjectIDsAfterSearch', {
+          userToken: token,
+          eventName: value,
+          index: 'blasters',
+          queryID: props.queryID,
+          objectIDs: [props.blasterData.id]
+        });
+      } else {
+        aa('convertedObjectIDs', {
+          userToken: token,
+          eventName: value,
+          index: 'blasters',
+          objectIDs: [props.blasterData.id]
+        });
+      }
+    }
+  }
+
   return (
     <div className="links">
       {props.blasterData.store && (
@@ -217,14 +257,15 @@ function BlasterLinks(props) {
           variant="contained"
           style={{ textAlign: "center", fontWeight: "bold", padding: "4px 12px 4px 12px", width: "30%", height: "50px" }}
           href={props.blasterData.store}
+          onMouseDown={(e) => linkClicked(e, "store")}
         >
-          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position:"absolute", left:"0px" }}>
+          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position: "absolute", left: "0px" }}>
             <RedeemIcon color="primary" />
           </Avatar>
-          <div style={{ textAlign: "right", position:"absolute", right:"12px" }}>
+          <div style={{ textAlign: "right", position: "absolute", right: "12px" }}>
             Store
             <br />
-            <p style={{fontSize: "12px", margin:"0px"}}>{storePriceData}</p>
+            <p style={{ fontSize: "12px", margin: "0px" }}>{storePriceData}</p>
           </div>
         </Button>
       )}
@@ -234,14 +275,15 @@ function BlasterLinks(props) {
           variant="contained"
           style={{ textAlign: "center", fontWeight: "bold", padding: "4px 12px 4px 12px", width: "30%", height: "50px" }}
           href={props.blasterData.kit}
+          onMouseDown={(e) => linkClicked(e, "kit")}
         >
-          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position:"absolute", left:"0px" }}>
+          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position: "absolute", left: "0px" }}>
             <HomeRepairServiceIcon color="primary" />
           </Avatar>
-          <div style={{ textAlign: "right", position:"absolute", right:"12px" }}>
+          <div style={{ textAlign: "right", position: "absolute", right: "12px" }}>
             Kit
             <br />
-            <p style={{fontSize: "12px", margin:"0px"}}>{kitPriceData}</p>
+            <p style={{ fontSize: "12px", margin: "0px" }}>{kitPriceData}</p>
           </div>
         </Button>
       )}
@@ -251,14 +293,15 @@ function BlasterLinks(props) {
           variant="contained"
           style={{ textAlign: "center", fontWeight: "bold", padding: "4px 12px 4px 12px", width: "30%", height: "50px" }}
           href={props.blasterData.files}
+          onMouseDown={(e) => linkClicked(e, "files")}
         >
-          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position:"absolute", left:"0px" }}>
+          <Avatar sx={{ bgcolor: "#ffffff", margin: "0px 8px 0px 8px", position: "absolute", left: "0px" }}>
             <InsertDriveFileIcon color="primary" />
           </Avatar>
-          <div style={{ textAlign: "right", position:"absolute", right:"12px" }}>
+          <div style={{ textAlign: "right", position: "absolute", right: "12px" }}>
             Files
             <br />
-            <p style={{fontSize: "12px", margin:"0px"}}>{filesPriceData}</p>
+            <p style={{ fontSize: "12px", margin: "0px" }}>{filesPriceData}</p>
           </div>
         </Button>
       )}

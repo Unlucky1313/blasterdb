@@ -5,7 +5,7 @@ import "./App.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { InstantSearch, SearchBox, Hits, Highlight, SortBy, RefinementList, ToggleRefinement } from "react-instantsearch";
+import { InstantSearch, SearchBox, Hits, Highlight, SortBy, RefinementList, ToggleRefinement, Configure } from "react-instantsearch";
 import algoliasearch from 'algoliasearch/lite';
 
 
@@ -37,15 +37,15 @@ export default function Search(props) {
   return (
     <Card className="searchHolder" sx={{ margin: "24px 36px", display: "flex", flexDirection: "row" }}>
 
-      <InstantSearch searchClient={searchClient} indexName="blasters" insights className="searchMain">
+      <InstantSearch searchClient={searchClient} indexName="blasters" insights={true} className="searchMain">
 
         <Card className="searchBox">
           <header className="searchHeader">
-            <h2 style={{marginBottom: "0px"}}>Search:</h2>
+            <h2 style={{ marginBottom: "0px" }}>Search:</h2>
             <SearchBox translations={{ placeholder: 'Search for Blasters' }} />
           </header>
           <div className="sortContainer">
-            <h2 style={{marginBottom: "0px"}}>Sort By:</h2>
+            <h2 style={{ marginBottom: "0px" }}>Sort By:</h2>
             <SortBy
               items={[
                 { label: 'Name', value: 'blasters' },
@@ -56,31 +56,31 @@ export default function Search(props) {
             />
           </div>
 
-          <h3 style={{marginBottom: "0px"}}>Propulsion:</h3>
+          <h3 style={{ marginBottom: "0px" }}>Propulsion:</h3>
           <RefinementList attribute="propulsion" />
-          <h3 style={{marginBottom: "0px"}}>Rate of Fire:</h3>
+          <h3 style={{ marginBottom: "0px" }}>Rate of Fire:</h3>
           <RefinementList attribute="rof" />
-          <h3 style={{marginBottom: "0px"}}>Feed Type:</h3>
+          <h3 style={{ marginBottom: "0px" }}>Feed Type:</h3>
           <RefinementList attribute="feed" />
-          <h3 style={{marginBottom: "0px"}}>Construction Type:</h3>
+          <h3 style={{ marginBottom: "0px" }}>Construction Type:</h3>
           <RefinementList attribute="construction" />
-          <h3 style={{marginBottom: "0px"}}>Difficulty of Build:</h3>
+          <h3 style={{ marginBottom: "0px" }}>Difficulty of Build:</h3>
           <RefinementList attribute="diff" />
-          <h3 style={{marginBottom: "0px"}}>Ammo Types:</h3>
-          <div style={{display:"flex", flexWrap: "wrap", gap: "8px", rowGap: "2px"}}>
-            <ToggleRefinement attribute="ammo.half" label="Half Length" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="ammo.mega" label="Mega" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="ammo.full" label="Full Length" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="ammo.megaXL" label="Mega XL" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="ammo.rival" label="Rival" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="ammo.rockets" label="Rockets" style={{width:"45%"}}/>
+          <h3 style={{ marginBottom: "0px" }}>Ammo Types:</h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", rowGap: "2px" }}>
+            <ToggleRefinement attribute="ammo.half" label="Half Length" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="ammo.mega" label="Mega" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="ammo.full" label="Full Length" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="ammo.megaXL" label="Mega XL" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="ammo.rival" label="Rival" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="ammo.rockets" label="Rockets" style={{ width: "45%" }} />
           </div>
 
-          <h3 style={{marginBottom: "0px"}}>Avalibility:</h3>
-          <div style={{display:"flex", flexDirection:"column", flexWrap: "wrap", gap: "8px", rowGap: "2px"}}>
-            <ToggleRefinement attribute="storeBool" label="Store" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="kitBool" label="Kit" style={{width:"45%"}}/>
-            <ToggleRefinement attribute="filesBool" label="Files" style={{width:"45%"}}/>
+          <h3 style={{ marginBottom: "0px" }}>Avalibility:</h3>
+          <div style={{ display: "flex", flexDirection: "column", flexWrap: "wrap", gap: "8px", rowGap: "2px" }}>
+            <ToggleRefinement attribute="storeBool" label="Store" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="kitBool" label="Kit" style={{ width: "45%" }} />
+            <ToggleRefinement attribute="filesBool" label="Files" style={{ width: "45%" }} />
           </div>
 
 
@@ -88,6 +88,7 @@ export default function Search(props) {
 
         <Hits hitComponent={BlasterDetail} className="hitsContainer" />
 
+        <Configure clickAnalytics />
       </InstantSearch>
 
     </Card>
@@ -95,10 +96,12 @@ export default function Search(props) {
 }
 
 
-function BlasterDetail({ hit }) {
+function BlasterDetail({ hit, sendEvent }) {
   const [blasterHero, setBlasterHero] = useState();
 
-  console.log(hit);
+  const conversionClicked = (value) => {
+    sendEvent('conversion', hit, value)
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -110,7 +113,7 @@ function BlasterDetail({ hit }) {
     getData();
   });
 
-  const blasterURL = "./blaster?blaster=" + hit.objectID;
+  const blasterURL = "./blaster?blaster=" + hit.objectID + "&queryID=" + hit.__queryID;
 
   var fpsStr = "";
   if (hit.fpsLow) {
@@ -139,7 +142,7 @@ function BlasterDetail({ hit }) {
 
       <h5 style={{ marginLeft: "12px", gridColumn: "fps", textAlign: "center", paddingTop: "5px" }}>{fpsStr}</h5>
 
-      <BlasterLinks hit={hit}></BlasterLinks>
+      <BlasterLinks hit={hit} conversionClicked={conversionClicked}></BlasterLinks>
 
       <div style={{ gridColumn: "actions", display: "flex", alignItems: "center" }}>
         <BlasterActions blasterData={hit} />

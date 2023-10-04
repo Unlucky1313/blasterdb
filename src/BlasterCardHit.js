@@ -14,7 +14,7 @@ import BlasterLinks from "./BlasterLinks";
 import { storage } from "./useFirebase";
 import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 
-export default function BlasterCard({ hit }) {
+export default function BlasterCardHit({ hit, sendEvent }) {
   const [blasterData, setBlasterData] = useState([]);
 
   useEffect(() => {
@@ -42,7 +42,10 @@ export default function BlasterCard({ hit }) {
   }, [hit.objectID]);
 
   const blasterURL = "./blaster?blaster=" + blasterData.id;
-  console.log(blasterData.id);
+  
+  const conversionClicked = (value) => {
+    sendEvent('conversion', hit, value)
+  };
 
   return (
     <Card className="blasterCardWrapper">
@@ -57,7 +60,6 @@ export default function BlasterCard({ hit }) {
           />
           
         </div>
-
 
         <CardContent>
           <Typography
@@ -89,14 +91,14 @@ export default function BlasterCard({ hit }) {
             <DescriptionGenerator blasterData={blasterData} />
           </Typography>
           <div style = {{position:"absolute", right:"12px", bottom:"0px"}}>
-          <BlasterLinks hit={hit}/>
+          <BlasterLinks hit={hit} conversionClicked = {conversionClicked}/>
           </div>
           {/* <BlasterLinks hit={hit}></BlasterLinks> */}
         </CardContent>
       </CardActionArea>
 
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <BlasterActions blasterData={blasterData} />
+        <BlasterActions blasterData={blasterData}  />
       </CardActions>
     </Card>
   );
