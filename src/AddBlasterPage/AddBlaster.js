@@ -156,7 +156,6 @@ export default function AddBlaster(props) {
       value: desc,
     });
 
-    console.log(desc);
   };
 
   const submitBlaster = async (e) => {
