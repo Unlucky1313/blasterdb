@@ -189,7 +189,6 @@ export default function UpdateBlaster(props) {
       value: desc,
     });
 
-    console.log(desc);
   };
 
   function changeHero(newValue) {
@@ -246,7 +245,7 @@ export default function UpdateBlaster(props) {
 
         {/* Tab Box */}
 
-        <AddTabs desc={blasterData.desc} changeDesc={changeDesc} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
+        <AddTabs desc={blasterData.desc} changeDesc={changeDesc} blasterId = {blasterData.id} videoReviews={blasterData.videoReviews} currTab={currTab} videoKey={videoKey} setVideoKey={setVideoKey} changeTab={changeTab} addVideoUrl={addVideoUrl} handleVideoRemove={handleVideoRemove}></AddTabs>
 
         {/* Sidebar */}
 

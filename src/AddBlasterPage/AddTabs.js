@@ -1,5 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import MUIRichTextEditor from "mui-rte";
+
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 import "../App.css";
 import Button from "@mui/material/Button";
@@ -10,9 +15,21 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckIcon from '@mui/icons-material/Check';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { convertToRaw } from 'draft-js'
+
+var config = {
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
+};
+if (!firebase.apps.length) {
+  firebase.initializeApp(config);
+}
 
 export default function AddTabs(props) {
 
@@ -38,7 +55,7 @@ export default function AddTabs(props) {
 
     {/* Description */}
 
-    {props.currTab === 0 && <AddDescription value={props.currTab} desc={props.desc} changeDesc={props.changeDesc} index={0} />}
+    {(props.currTab === 0) && <AddDescription value={props.currTab} blasterId = {props.blasterId} changeDesc={props.changeDesc} index={0} />}
 
     {/* Video Reviews */}
 
@@ -49,36 +66,31 @@ export default function AddTabs(props) {
 
 function AddDescription(props) {
 
-  const [saveCheck, setSaveCheck] = useState(false);
-  const [descTest, setDescTest] = useState(false);
+  const [desc, setDesc] = useState(false);
+
+  console.log(props.blasterId)
+
+  useEffect(() => {
+    const getData = async () => {
+      const docRef = doc(firebase.firestore(), "blasters", props.blasterId);
+      const docSnap = await getDoc(docRef);
+
+      setDesc(docSnap.data().desc);
+
+    };
+    getData();
+  }, [props.blasterId]);
 
   const myTheme = createTheme({
     // Set up your custom MUI theme here
   });
 
-  const saveDesc = (data) => {
-    props.changeDesc(data);
-    console.log(data);
-  }
-
   const ref = useRef(null);
 
-  const delay = ms => new Promise(res => setTimeout(res, ms));
-
-  const handleClick = async () => {
-    ref.current?.save()
-    setSaveCheck(true)
-    await delay(2000);
-    setSaveCheck(false)
+  const descChange = async (event) => {
+    props.changeDesc(JSON.stringify(convertToRaw(event.getCurrentContent())));
   }
 
-  const descChange = event => {
-    const plainText = event.getCurrentContent().getPlainText() // for plain text
-    console.log(plainText);
-    const rteContent = convertToRaw(event.getCurrentContent()) // for rte content with text formating
-    rteContent && setDescTest(JSON.stringify(rteContent)) // store your rteContent to state
-    console.log(descTest);
-  }
 
   return (
     <Box className="addDesc">
@@ -86,8 +98,7 @@ function AddDescription(props) {
         <MUIRichTextEditor
           label="Blaster description..."
           inlineToolbar={true}
-          onSave={saveDesc}
-          defaultValue={props.desc}
+          defaultValue={desc}
           ref={ref}
           onChange={descChange}
           controls = {["title", "bold", "italic", "underline", "strikethrough", "highlight", "numberList", "bulletList", "quote", "code", "clear"]}
@@ -95,9 +106,6 @@ function AddDescription(props) {
       </ThemeProvider>
       {/* <TextField multiline sx={{ padding: "16px" }} /> */}
 
-      <div style={{  display: "flex", justifyContent: "center", bottom:"0px", position:"absolute", width:"100%" }}>
-        <Button size="large" variant="contained" style={{}} onClick={handleClick} endIcon={saveCheck ? <CheckIcon /> : "" } >Save</Button>
-      </div>
     </Box>
   );
 }
