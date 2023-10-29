@@ -63,7 +63,7 @@ export default function BlasterCard(props) {
             gutterBottom
             variant="h4"
             component="div"
-            sx={{ marginBottom: "-5px", fontWeight: "bold" }}
+            sx={{ marginBottom: "-5px", fontWeight: "bold", fontSize: "30px" }}
           >
             {blasterData.blasterName}
           </Typography>

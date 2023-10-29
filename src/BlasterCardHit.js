@@ -66,7 +66,7 @@ export default function BlasterCardHit({ hit, sendEvent }) {
             gutterBottom
             variant="h4"
             component="div"
-            sx={{ marginBottom: "-5px", fontWeight: "bold" }}
+            sx={{ marginBottom: "-5px", fontWeight: "bold", fontSize: "30px" }}
           >
             {blasterData.blasterName}
           </Typography>
@@ -98,7 +98,7 @@ export default function BlasterCardHit({ hit, sendEvent }) {
       </CardActionArea>
 
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <BlasterActions blasterData={blasterData}  />
+        <BlasterActions blasterData={blasterData} />
       </CardActions>
     </Card>
   );
