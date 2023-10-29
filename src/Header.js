@@ -12,6 +12,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
@@ -32,10 +34,19 @@ const auth = firebase.auth();
 
 export default function Header(props) {
   const [user] = useAuthState(auth);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
   function handleUser(value) {
     props.onChange(value);
   }
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <header className="App-header">
@@ -64,6 +75,37 @@ export default function Header(props) {
           )}
         </section>
       </div>
+      <div>
+        <Button
+          id="basic-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+          variant="contained"
+        >
+          Dashboard
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          <MenuItem>
+            <Button href="/search" onClick={handleClose} size="small" ><SearchIcon />Search</Button>
+          </MenuItem>
+          <MenuItem>
+            <Button href="/add" onClick={handleClose} size="small" ><AddCircleIcon />Add</Button>
+          </MenuItem>
+          <MenuItem>
+            <Button href="/features" onClick={handleClose} size="small" >Request a Feature!</Button>
+          </MenuItem>
+        </Menu>
+      </div>
     </header>
   );
 }
@@ -86,13 +128,13 @@ function Profile() {
   return (
     auth.currentUser && (
       <>
-      <Link href="./profile">
-        <Avatar
-          src={
-            photoURL ||
-            "https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg"
-          }
-        />
+        <Link href="./profile">
+          <Avatar
+            src={
+              photoURL ||
+              "https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg"
+            }
+          />
         </Link>
         <Button
           variant="contained"
@@ -123,7 +165,7 @@ function CheckForUser(props) {
       } else {
         // doc.data() will be undefined in this case
         props.onChange(uid);
-        setDoc(docRef, { collected: [], wishlist: [], username: email, role: "User"});
+        setDoc(docRef, { collected: [], wishlist: [], username: email, role: "User" });
       }
     })
     .catch((error) => {
