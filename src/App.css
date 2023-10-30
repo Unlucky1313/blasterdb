@@ -196,6 +196,28 @@ body {
   max-width: 325px;
 }
 
+.menu{
+  margin: 0px 20px 0px 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.menuIcon{
+  padding:6px !important;
+  min-width: 0px !important;
+}
+
+.menuItem{
+  padding:2px !important;
+}
+
+.menuButton{
+  justify-content: flex-start !important;
+  font-weight: 700 !important;
+  gap: 10px;
+  width:100%;
+}
+
 .footerWrap {
   position: "sticky";
   bottom: 0;
