@@ -13,6 +13,7 @@ import BlasterCard from "./BlasterCard";
 import home1 from "./img/home1.png";
 import home2 from "./img/home2.png";
 import home3 from "./img/home3.png";
+import { Button } from "@mui/material";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -87,22 +88,10 @@ export default function Home(props) {
       .then(({ hits }) => {
         setTrendingList(hits);
       });
-  }, []);
+  }, [releasedIndex, trendingIndex]);
 
   return (
     <>
-      {/* <div className="cardHolder">
-        <BlasterCard user={props.user} blaster={"D0i9KOyqL8fnCFKbcXcq"} />
-        <BlasterCard user={props.user} blaster={"nbPw3IRskYq08w4sxU44"} />
-        <BlasterCard user={props.user} blaster={"5GiHVMHTlcFp6MEbt9EQ"} />
-        <BlasterCard user={props.user} blaster={"J9k2v2vm3gSTpHYyFFzt"} />
-        <BlasterCard user={props.user} blaster={"BCV9lIU2Tk00377fH0A7"} />
-        <BlasterCard user={props.user} blaster={"JTbAIHFbdpS58LB4VxRL"} />
-        <BlasterCard user={props.user} blaster={"V76RPfOjMw9e9jwDVqXR"} />
-        <BlasterCard user={props.user} blaster={"3znD86UqNYW4ACpfXgQ3"} />
-        <BlasterCard user={props.user} blaster={"B58HaJnrPiISgccZscVM"} />
-
-      </div> */}
       <div
         style={{
           width: "90%",
@@ -172,14 +161,21 @@ export default function Home(props) {
         <Configure hitsPerPage={10} />
       </InstantSearch>
 
-      {/* <InstantSearch
-        searchClient={searchClient}
-        indexName="blasters"
-        insights
-        className="cardHolder"
-      >
-        <Hits hitComponent={BlasterCardHit} className="searchHome" />
-      </InstantSearch> */}
+      <Card className="searchCTA">
+        <Card className="searchCTAText">
+          <h2>
+            Still didn't find what you were looking for?
+          </h2>
+          <h3>
+            Head over to the search page to view the full database of blasters:
+          </h3>
+
+          <Button size="large" variant="contained" href="/search" className="searchCTAButton">
+            Search Page
+          </Button>
+        </Card>
+      </Card>
+
     </>
   );
 }
