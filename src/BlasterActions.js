@@ -13,6 +13,10 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 export default function BlasterActions(props) {
   const db = firebase.firestore();
 
+  if (props.blasterData.objectID){
+    props.blasterData.id = props.blasterData.objectID;
+  }
+
   var userid = ""
   const [wishClicked, setWishClicked] = useState(false);
   const [collClicked, setCollClicked] = useState(false);
