@@ -4,8 +4,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-import { InstantSearch, Configure } from "react-instantsearch";
-import algoliasearch from "algoliasearch/lite";
+import { SearchClient as TypesenseSearchClient } from "typesense";
+
 import Card from "@mui/material/Card";
 import Carousel from "react-multi-carousel";
 
@@ -29,10 +29,10 @@ if (!firebase.apps.length) {
 }
 
 export default function Home(props) {
-  const searchClient = algoliasearch(
-    process.env.REACT_APP_ALGOLIA_APP_ID,
-    process.env.REACT_APP_ALGOLIA_SEARCH_KEY
-  );
+  // const searchClient = algoliasearch(
+  //   process.env.REACT_APP_ALGOLIA_APP_ID,
+  //   process.env.REACT_APP_ALGOLIA_SEARCH_KEY
+  // );
 
   const responsive = {
     superLargeDesktop: {
@@ -65,30 +65,51 @@ export default function Home(props) {
     },
   };
 
-  const releasedIndex = searchClient.initIndex("blasters_released");
-  const trendingIndex = searchClient.initIndex("blasters");
   const [releasedList, setReleasedList] = useState([]);
   const [trendingList, setTrendingList] = useState([]);
 
+
+
+  // Set up Typesense Searching
   useEffect(() => {
-    releasedIndex
-      .search("", {
-        attributesToRetrieve: ["objectID"],
-        hitsPerPage: 10,
-      })
+
+    let client = new TypesenseSearchClient({
+      'nodes': [{
+        'host': process.env.REACT_APP_TYPESENSE_NODE, // For Typesense Cloud use xxx.a1.typesense.net
+        'port': '443',      // For Typesense Cloud use 443
+        'protocol': 'https'   // For Typesense Cloud use https
+      }],
+      'apiKey': process.env.REACT_APP_TYPESENSE_SEARCH_KEY,
+      'connectionTimeoutSeconds': 2
+    })
+
+    let releasedParameters = {
+      'q': '*',
+      'query_by': 'blasterName',
+      'sort_by': 'released:desc'
+    }
+    let trendingParameters = {
+      'q': '*',
+      'query_by': 'blasterName',
+      'sort_by': 'fpsHigh:desc'
+    }
+
+    client.collections('blasters')
+      .documents()
+      .search(releasedParameters)
       .then(({ hits }) => {
         setReleasedList(hits);
       });
 
-    trendingIndex
-      .search("", {
-        attributesToRetrieve: ["objectID"],
-        hitsPerPage: 10,
-      })
+    client.collections('blasters')
+      .documents()
+      .search(trendingParameters)
       .then(({ hits }) => {
         setTrendingList(hits);
       });
-  }, [releasedIndex, trendingIndex]);
+
+  }, []);
+
 
   return (
     <>
@@ -123,44 +144,28 @@ export default function Home(props) {
         </Carousel>
       </div>
 
-      <InstantSearch
-        searchClient={searchClient}
-        indexName="blasters_released"
-        insights
-        className="cardHolder"
-        hitsPerPage="10"
-      >
-        <Card className="profileCardHolder">
-          <h1 style={{ margin: "8px 0px 8px 24px" }}>Hot Right Now:</h1>
+      {/* Hot Right Now */}
+      <Card className="profileCardHolder">
+        <h1 style={{ margin: "8px 0px 8px 24px" }}>Hot Right Now:</h1>
+        <Carousel responsive={responsive} showDots={true}>
+          {trendingList.map((obj) => (
+            <BlasterCard blaster={obj.document.id} key={obj.document.id} />
+          ))}
+        </Carousel>
+      </Card>
 
-          <Carousel responsive={responsive} showDots={true}>
-            {trendingList.map((obj) => (
-              <BlasterCard blaster={obj.objectID} key={obj.objectID} />
-            ))}
-          </Carousel>
-        </Card>
-        <Configure hitsPerPage={10} />
-      </InstantSearch>
+      {/* Trending */}
+      <Card className="profileCardHolder">
+        <h1 style={{ margin: "8px 0px 8px 24px" }}>New Releases: </h1>
 
-      <InstantSearch
-        searchClient={searchClient}
-        indexName="blasters_released"
-        insights
-        className="cardHolder"
-        hitsPerPage="10"
-      >
-        <Card className="profileCardHolder">
-          <h1 style={{ margin: "8px 0px 8px 24px" }}>New Releases: </h1>
+        <Carousel responsive={responsive} showDots={true}>
+          {releasedList.map((obj) => (
+            <BlasterCard blaster={obj.document.id} key={obj.document.id} />
+          ))}
+        </Carousel>
+      </Card>
 
-          <Carousel responsive={responsive} showDots={true}>
-            {releasedList.map((obj) => (
-              <BlasterCard blaster={obj.objectID} key={obj.objectID} />
-            ))}
-          </Carousel>
-        </Card>
-        <Configure hitsPerPage={10} />
-      </InstantSearch>
-
+      {/* Search Page Call to Action */}
       <Card className="searchCTA">
         <Card className="searchCTAText">
           <h2>

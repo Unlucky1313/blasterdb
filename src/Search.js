@@ -14,8 +14,9 @@ import {
   RefinementList,
   ToggleRefinement,
   Pagination,
+  Configure
 } from "react-instantsearch";
-import algoliasearch from "algoliasearch/lite";
+import TypesenseInstantSearchAdapter from "typesense-instantsearch-adapter";
 
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
@@ -39,10 +40,31 @@ if (!firebase.apps.length) {
 }
 
 export default function Search(props) {
-  const searchClient = algoliasearch(
-    process.env.REACT_APP_ALGOLIA_APP_ID,
-    process.env.REACT_APP_ALGOLIA_SEARCH_KEY
-  );
+  // const searchClient = algoliasearch(
+  //   process.env.REACT_APP_ALGOLIA_APP_ID,
+  //   process.env.REACT_APP_ALGOLIA_SEARCH_KEY
+  // );
+
+  const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
+    server: {
+      apiKey: process.env.REACT_APP_TYPESENSE_SEARCH_KEY, // Be sure to use the search-only-api-key
+      nodes: [
+        {
+          host: process.env.REACT_APP_TYPESENSE_NODE,
+          port: 443,
+          protocol: "https"
+        }
+      ]
+    },
+
+    // The following parameters are directly passed to Typesense's search API endpoint.
+    //  So you can pass any parameters supported by the search endpoint below.
+    //  queryBy is required.
+    additionalSearchParameters: {
+      query_by: "blasterName"
+    }
+  });
+  const searchClient = typesenseInstantsearchAdapter.searchClient;
 
   return (
     <Card
@@ -55,6 +77,9 @@ export default function Search(props) {
         insights
         className="searchMain"
       >
+        <Configure
+          hitsPerPage={20}
+        />
         <Card className="searchBox">
           <header className="searchHeader">
             <h2 style={{ marginBottom: "0px" }}>Search:</h2>

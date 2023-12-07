@@ -17,6 +17,8 @@ import { getDownloadURL, ref as storageRef, } from "firebase/storage";
 export default function BlasterCard(props) {
   const [blasterData, setBlasterData] = useState([]);
 
+  console.log(props);
+
   useEffect(() => {
     const getData = async () => {
       const docRef = doc(firebase.firestore(), "blasters", props.blaster);
