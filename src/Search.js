@@ -17,6 +17,7 @@ import {
   Configure
 } from "react-instantsearch";
 import TypesenseInstantSearchAdapter from "typesense-instantsearch-adapter";
+import { SearchClient as TypesenseSearchClient } from "typesense";
 
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
@@ -25,6 +26,7 @@ import { getDownloadURL, ref as storageRef } from "firebase/storage";
 import Link from "@mui/material/Link";
 import BlasterActions from "./BlasterActions";
 import BlasterLinks from "./BlasterLinks";
+import TextField from "@mui/material/TextField";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -66,6 +68,47 @@ export default function Search(props) {
   });
   const searchClient = typesenseInstantsearchAdapter.searchClient;
 
+  const [searchList, setSearchList] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("*");
+  const [searchParameters, setSearchParameters] = useState({
+    'q': "*",
+    'query_by': 'blasterName,creator,propulsion',
+    'sort_by': 'released:desc'
+  });
+
+
+  useEffect(() => {
+    let client = new TypesenseSearchClient({
+      'nodes': [{
+        'host': process.env.REACT_APP_TYPESENSE_NODE, // For Typesense Cloud use xxx.a1.typesense.net
+        'port': '443',      // For Typesense Cloud use 443
+        'protocol': 'https'   // For Typesense Cloud use https
+      }],
+      'apiKey': process.env.REACT_APP_TYPESENSE_SEARCH_KEY,
+      'connectionTimeoutSeconds': 2
+    })
+
+    client.collections('blasters')
+      .documents()
+      .search(searchParameters)
+      .then(({ hits }) => {
+        setSearchList(hits);
+        console.log(hits);
+        console.log(searchList);
+      });
+  }, [searchParameters]);
+
+  const searchChange = (event) => {
+    console.log(event.target.value);
+    let updatedValue = { q: event.target.value };
+    setSearchParameters(searchParameters => ({
+      ...searchParameters,
+      ...updatedValue
+    }));
+    // onChange(event);
+  };
+
   return (
     <Card
       className="searchHolder"
@@ -83,7 +126,14 @@ export default function Search(props) {
         <Card className="searchBox">
           <header className="searchHeader">
             <h2 style={{ marginBottom: "0px" }}>Search:</h2>
-            <SearchBox translations={{ placeholder: "Search for Blasters" }} />
+            <TextField
+              id="outlined-required"
+              label="Search for Blasters"
+              onChange={searchChange}
+              name="shortDesc"
+              inputProps={{ maxLength: 40 }}
+            />
+
           </header>
           <div className="sortContainer">
             <h2 style={{ marginBottom: "0px" }}>Sort By:</h2>
@@ -177,7 +227,7 @@ export default function Search(props) {
         </Card>
 
         <div style={{ width: "100%" }}>
-          <Hits hitComponent={BlasterDetail} className="hitsContainer" />
+          {/* <Hits hitComponent={BlasterDetail} className="hitsContainer" /> */}
           <div
             style={{
               width: "100%",
@@ -186,7 +236,10 @@ export default function Search(props) {
               margin: "24px",
             }}
           >
-            <Pagination />
+            {(searchList.map((obj) => (
+              <BlasterDetail2 blaster={obj.document} key={obj.document} />
+            )))}
+            
           </div>
         </div>
       </InstantSearch>
@@ -197,7 +250,7 @@ export default function Search(props) {
 function BlasterDetail({ hit }) {
   const [blasterHero, setBlasterHero] = useState();
 
-  console.log(hit);
+  // console.log(hit);
 
   useEffect(() => {
     const getData = async () => {
@@ -294,6 +347,110 @@ function BlasterDetail({ hit }) {
         style={{ gridColumn: "actions", display: "flex", alignItems: "center" }}
       >
         <BlasterActions blasterData={hit} />
+      </div>
+    </Box>
+  );
+}
+
+function BlasterDetail2({ blaster }) {
+  const [blasterHero, setBlasterHero] = useState();
+
+  // console.log(hit);
+
+  useEffect(() => {
+    const getData = async () => {
+      const resizedRef = storageRef(
+        storage,
+        `images/${blaster.imageArray[0]}_256x144`
+      );
+      getDownloadURL(resizedRef).then((url) => {
+        setBlasterHero(url);
+      });
+    };
+    getData();
+  });
+
+  console.log(blaster);
+
+  const blasterURL = "./blaster?blaster=" + blaster.id;
+
+  var fpsStr = "";
+  if (blaster.fpsLow) {
+    fpsStr += blaster.fpsLow;
+  }
+  if (blaster.fpsHigh && blaster.fpsHigh !== blaster.fpsLow) {
+    fpsStr += "-" + blaster.fpsHigh;
+  }
+  fpsStr += " FPS";
+
+  return (
+    <Box className="detailGrid">
+      <a href={blasterURL}>
+        <img
+          style={{
+            width: "128px",
+            marginTop: "4px",
+            aspectRatio: "16/9",
+            objectFit: "cover",
+            gridColumn: "image",
+          }}
+          src={blasterHero}
+          alt="Blaster"
+        />
+      </a>
+      <Link href={blasterURL} underline="hover" color="black">
+        <h2
+          style={{
+            marginLeft: "12px",
+            marginBottom: "0px",
+            gridColumn: "name",
+          }}
+        >
+        </h2>
+        <h4
+          style={{
+            marginLeft: "12px",
+            marginTop: "4px",
+            marginBottom: "0px",
+            gridColumn: "name",
+          }}
+        >
+        </h4>
+      </Link>
+
+      <h3
+        style={{ marginLeft: "12px", gridColumn: "creator", paddingTop: "5px" }}
+      >
+      </h3>
+
+      <h5
+        style={{
+          marginLeft: "12px",
+          gridColumn: "propulsion",
+          textAlign: "center",
+          paddingTop: "5px",
+        }}
+      >
+        {blaster.propulsion}
+      </h5>
+
+      <h5
+        style={{
+          marginLeft: "12px",
+          gridColumn: "fps",
+          textAlign: "center",
+          paddingTop: "5px",
+        }}
+      >
+        {fpsStr}
+      </h5>
+
+      <BlasterLinks hit={blaster}></BlasterLinks>
+
+      <div
+        style={{ gridColumn: "actions", display: "flex", alignItems: "center" }}
+      >
+        <BlasterActions blasterData={blaster} />
       </div>
     </Box>
   );

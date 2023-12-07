@@ -68,8 +68,6 @@ export default function Home(props) {
   const [releasedList, setReleasedList] = useState([]);
   const [trendingList, setTrendingList] = useState([]);
 
-
-
   // Set up Typesense Searching
   useEffect(() => {
 
