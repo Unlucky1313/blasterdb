@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@algolia/recommend-react": "^1.10.0",
+    "@babel/runtime": "^7.23.5",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",

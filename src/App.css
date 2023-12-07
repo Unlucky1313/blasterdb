@@ -151,6 +151,13 @@ body {
   flex-direction: column;
 }
 
+.searchHitsHolder{
+  display: flex;
+  justify-content: center;
+  margin: 24px;
+  flex-direction: column;
+}
+
 .profileCard{
   width: 90%;
   margin: 24px 0px 0px 5%;
@@ -490,12 +497,8 @@ button {
   padding: 20px;
 }
 
-/* INPUT */
-.searchHeader {
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
+.searchCheckbox{
+  padding: 2px !important;
 }
 
 .ais-SearchBox{

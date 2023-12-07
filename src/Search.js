@@ -5,28 +5,23 @@ import "./App.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import {
-  InstantSearch,
-  SearchBox,
-  Hits,
-  Highlight,
-  SortBy,
-  RefinementList,
-  ToggleRefinement,
-  Pagination,
-  Configure
-} from "react-instantsearch";
-import TypesenseInstantSearchAdapter from "typesense-instantsearch-adapter";
 import { SearchClient as TypesenseSearchClient } from "typesense";
 
 import Card from "@mui/material/Card";
-import Box from "@mui/material/Box";
 import { storage } from "./useFirebase";
 import { getDownloadURL, ref as storageRef } from "firebase/storage";
 import Link from "@mui/material/Link";
 import BlasterActions from "./BlasterActions";
 import BlasterLinks from "./BlasterLinks";
 import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Pagination from "@mui/material/Pagination";
 
 var config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -47,66 +42,156 @@ export default function Search(props) {
   //   process.env.REACT_APP_ALGOLIA_SEARCH_KEY
   // );
 
-  const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-    server: {
-      apiKey: process.env.REACT_APP_TYPESENSE_SEARCH_KEY, // Be sure to use the search-only-api-key
-      nodes: [
-        {
-          host: process.env.REACT_APP_TYPESENSE_NODE,
-          port: 443,
-          protocol: "https"
-        }
-      ]
-    },
+  // const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
+  //   server: {
+  //     apiKey: process.env.REACT_APP_TYPESENSE_SEARCH_KEY, // Be sure to use the search-only-api-key
+  //     nodes: [
+  //       {
+  //         host: process.env.REACT_APP_TYPESENSE_NODE,
+  //         port: 443,
+  //         protocol: "https"
+  //       }
+  //     ]
+  //   },
 
-    // The following parameters are directly passed to Typesense's search API endpoint.
-    //  So you can pass any parameters supported by the search endpoint below.
-    //  queryBy is required.
-    additionalSearchParameters: {
-      query_by: "blasterName"
-    }
-  });
-  const searchClient = typesenseInstantsearchAdapter.searchClient;
+  //   // The following parameters are directly passed to Typesense's search API endpoint.
+  //   //  So you can pass any parameters supported by the search endpoint below.
+  //   //  queryBy is required.
+  //   additionalSearchParameters: {
+  //     query_by: "blasterName"
+  //   }
+  // });
+  // const searchClient = typesenseInstantsearchAdapter.searchClient;
 
   const [searchList, setSearchList] = useState([]);
-
-  const [searchQuery, setSearchQuery] = useState("*");
+  const [pages, setPages] = useState(0);
+  const [page, setPage] = useState(1);
   const [searchParameters, setSearchParameters] = useState({
-    'q': "*",
-    'query_by': 'blasterName,creator,propulsion',
-    'sort_by': 'released:desc'
+    q: "*",
+    query_by: "blasterName,creator,shortDesc,propulsion,rof",
+    sort_by: "released:desc",
+    per_page: 20,
+    infix: "always",
+    filterArray: {
+      propulsion: [],
+      rof: [],
+      feed: [],
+      construction: [],
+      diff: [],
+      ammo: [],
+      avalibility: [],
+    },
+    page: 1
   });
-
 
   useEffect(() => {
     let client = new TypesenseSearchClient({
-      'nodes': [{
-        'host': process.env.REACT_APP_TYPESENSE_NODE, // For Typesense Cloud use xxx.a1.typesense.net
-        'port': '443',      // For Typesense Cloud use 443
-        'protocol': 'https'   // For Typesense Cloud use https
-      }],
-      'apiKey': process.env.REACT_APP_TYPESENSE_SEARCH_KEY,
-      'connectionTimeoutSeconds': 2
-    })
+      nodes: [
+        {
+          host: process.env.REACT_APP_TYPESENSE_NODE, // For Typesense Cloud use xxx.a1.typesense.net
+          port: "443", // For Typesense Cloud use 443
+          protocol: "https", // For Typesense Cloud use https
+        },
+      ],
+      apiKey: process.env.REACT_APP_TYPESENSE_SEARCH_KEY,
+      connectionTimeoutSeconds: 2,
+    });
 
-    client.collections('blasters')
+    client
+      .collections("blasters")
       .documents()
       .search(searchParameters)
-      .then(({ hits }) => {
+      .then(({ hits, found }) => {
         setSearchList(hits);
-        console.log(hits);
-        console.log(searchList);
+        setPages(Math.ceil(found / 20));
+        console.log(Math.ceil(found / 20));
       });
   }, [searchParameters]);
+
+  const pageChange = (event, value) => {
+    setPage(value);
+    console.log(page);
+    let updatedValue = { page: value };
+    setSearchParameters((searchParameters) => ({
+      ...searchParameters,
+      ...updatedValue,
+    }));
+  };
 
   const searchChange = (event) => {
     console.log(event.target.value);
     let updatedValue = { q: event.target.value };
-    setSearchParameters(searchParameters => ({
+    setSearchParameters((searchParameters) => ({
       ...searchParameters,
-      ...updatedValue
+      ...updatedValue,
     }));
-    // onChange(event);
+  };
+
+  const sortChange = (event) => {
+    console.log(event.target.value);
+    let updatedValue = { sort_by: event.target.value };
+    setSearchParameters((searchParameters) => ({
+      ...searchParameters,
+      ...updatedValue,
+    }));
+    console.log(searchParameters);
+  };
+
+  const checkboxChange = (event) => {
+    var filterString = "";
+    var filterArray = searchParameters.filterArray;
+    var filterKey = event.target.value.includes("ammo")
+      ? "ammo"
+      : event.target.value.split(":")[0];
+
+    if (event.target.value.includes("Bool")) {
+      filterKey = "avalibility";
+    }
+
+    // If Checked add to array
+    if (event.target.checked) {
+      filterArray[filterKey].push(event.target.value);
+    }
+
+    // If not Checked remove from array
+    else {
+      const index = filterArray[filterKey].indexOf(event.target.value);
+      if (index > -1) {
+        // only splice array when item is found
+        filterArray[filterKey].splice(index, 1); // 2nd parameter means remove one item only
+      }
+    }
+
+    // Loop through array of arrays to add each to filters
+    Object.keys(filterArray).forEach((key) => {
+      console.log(key, filterArray[key]);
+      if (filterArray[key].length !== 0) {
+        // Parentheses to begin type of filters
+        filterString = filterString + "(";
+
+        // Loop though filter type and add each
+        filterArray[key].forEach((filter) => {
+          filterString += filter + "||";
+        });
+
+        // Remove the last "||" and add &&
+        filterString =
+          filterString.substring(0, filterString.length - 2) + ")&&";
+      }
+    });
+
+    // Remove the last "&&"
+    filterString = filterString.substring(0, filterString.length - 2);
+
+    // Update main parameter object
+    let updatedValue = {
+      filter_by: filterString,
+      filterArray: filterArray,
+    };
+    setSearchParameters((searchParameters) => ({
+      ...searchParameters,
+      ...updatedValue,
+    }));
   };
 
   return (
@@ -114,245 +199,413 @@ export default function Search(props) {
       className="searchHolder"
       sx={{ margin: "24px 36px", display: "flex", flexDirection: "row" }}
     >
-      <InstantSearch
-        searchClient={searchClient}
-        indexName="blasters"
-        insights
-        className="searchMain"
-      >
-        <Configure
-          hitsPerPage={20}
+      <Card className="searchBox">
+        <TextField
+          id="outlined-required"
+          label="Search for Blasters"
+          onChange={searchChange}
+          name="shortDesc"
+          inputProps={{ maxLength: 40 }}
         />
-        <Card className="searchBox">
-          <header className="searchHeader">
-            <h2 style={{ marginBottom: "0px" }}>Search:</h2>
-            <TextField
-              id="outlined-required"
-              label="Search for Blasters"
-              onChange={searchChange}
-              name="shortDesc"
-              inputProps={{ maxLength: 40 }}
-            />
 
-          </header>
-          <div className="sortContainer">
-            <h2 style={{ marginBottom: "0px" }}>Sort By:</h2>
-            <SortBy
-              items={[
-                { label: "Name", value: "blasters" },
-                { label: "Min Fps", value: "blasters_min_fps" },
-                { label: "Max Fps", value: "blasters_max_fps" },
-                { label: "Release Date", value: "blasters_released" },
-              ]}
-            />
-          </div>
-
-          <h3 style={{ marginBottom: "0px" }}>Propulsion:</h3>
-          <RefinementList attribute="propulsion" />
-          <h3 style={{ marginBottom: "0px" }}>Rate of Fire:</h3>
-          <RefinementList attribute="rof" />
-          <h3 style={{ marginBottom: "0px" }}>Feed Type:</h3>
-          <RefinementList attribute="feed" />
-          <h3 style={{ marginBottom: "0px" }}>Construction Type:</h3>
-          <RefinementList attribute="construction" />
-          <h3 style={{ marginBottom: "0px" }}>Difficulty of Build:</h3>
-          <RefinementList attribute="diff" />
-          <h3 style={{ marginBottom: "0px" }}>Ammo Types:</h3>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "8px",
-              rowGap: "2px",
-            }}
+        <div className="sortContainer">
+          <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+          <Select
+            label="Age"
+            onChange={sortChange}
+            defaultValue="blasterName:asc"
           >
-            <ToggleRefinement
-              attribute="ammo.half"
-              label="Half Length"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="ammo.mega"
-              label="Mega"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="ammo.full"
-              label="Full Length"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="ammo.megaXL"
-              label="Mega XL"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="ammo.rival"
-              label="Rival"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="ammo.rockets"
-              label="Rockets"
-              style={{ width: "45%" }}
-            />
-          </div>
+            <MenuItem value={"blasterName:asc"}>Name</MenuItem>
+            <MenuItem value={"fpsLow:asc"}>Min Fps</MenuItem>
+            <MenuItem value={"fpsHigh:desc"}>Max Fps</MenuItem>
+            <MenuItem value={"released:desc"}>Release Date</MenuItem>
+          </Select>
+        </div>
 
-          <h3 style={{ marginBottom: "0px" }}>Avalibility:</h3>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "wrap",
-              gap: "8px",
-              rowGap: "2px",
-            }}
-          >
-            <ToggleRefinement
-              attribute="storeBool"
-              label="Store"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="kitBool"
-              label="Kit"
-              style={{ width: "45%" }}
-            />
-            <ToggleRefinement
-              attribute="filesBool"
-              label="Files"
-              style={{ width: "45%" }}
-            />
-          </div>
-        </Card>
+        <Divider />
 
-        <div style={{ width: "100%" }}>
-          {/* <Hits hitComponent={BlasterDetail} className="hitsContainer" /> */}
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              margin: "24px",
-            }}
-          >
-            {(searchList.map((obj) => (
-              <BlasterDetail2 blaster={obj.document} key={obj.document} />
-            )))}
-            
+        <h3 style={{ marginBottom: "0px" }}>Propulsion:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"propulsion:Springer"}
+                className="searchCheckbox"
+              />
+            }
+            label="Springer"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"propulsion:Flywheeler"}
+                className="searchCheckbox"
+              />
+            }
+            label="Flywheeler"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"propulsion:Stringer"}
+                className="searchCheckbox"
+              />
+            }
+            label="Stringer"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"propulsion:HPA"}
+                className="searchCheckbox"
+              />
+            }
+            label="HPA"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"propulsion:LPA"}
+                className="searchCheckbox"
+              />
+            }
+            label="LPA"
+          />
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Rate of Fire:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"rof:Prime to Fire"}
+                className="searchCheckbox"
+              />
+            }
+            label="Prime to Fire"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"rof:Slamfire"}
+                className="searchCheckbox"
+              />
+            }
+            label="Slamfire"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"rof:Semi Auto"}
+                className="searchCheckbox"
+              />
+            }
+            label="Semi Auto"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"rof:Full Auto"}
+                className="searchCheckbox"
+              />
+            }
+            label="Full Auto"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"rof:Select Fire"}
+                className="searchCheckbox"
+              />
+            }
+            label="Select Fire"
+          />
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Feed Type:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"feed:Magazine"}
+                className="searchCheckbox"
+              />
+            }
+            label="Magazine"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"feed:Cylinder"}
+                className="searchCheckbox"
+              />
+            }
+            label="Cylinder"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"feed:Internal Clip"}
+                className="searchCheckbox"
+              />
+            }
+            label="Internal Clip"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"feed:Hopper"}
+                className="searchCheckbox"
+              />
+            }
+            label="Hopper"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"feed:Front Load"}
+                className="searchCheckbox"
+              />
+            }
+            label="Front Load"
+          />
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Construction Type:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"construction:3D Printed"}
+                className="searchCheckbox"
+              />
+            }
+            label="3D Printed"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"construction:Injection Molded"}
+                className="searchCheckbox"
+              />
+            }
+            label="Injection Molded"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"construction:Metal"}
+                className="searchCheckbox"
+              />
+            }
+            label="Metal"
+          />
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Difficulty of Build:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:No Build Needed"}
+                className="searchCheckbox"
+              />
+            }
+            label="No Build Needed"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:Very Easy"}
+                className="searchCheckbox"
+              />
+            }
+            label="Very Easy"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:Easy"}
+                className="searchCheckbox"
+              />
+            }
+            label="Easy"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:Medium"}
+                className="searchCheckbox"
+              />
+            }
+            label="Medium"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:Difficult"}
+                className="searchCheckbox"
+              />
+            }
+            label="Difficult"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"diff:Very Difficult"}
+                className="searchCheckbox"
+              />
+            }
+            label="Very Difficult"
+          />
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Ammo Types:</h3>
+        <FormGroup>
+          <div style={{ display: "flex" }}>
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.half:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="Half Darts"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.full:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="Full Darts"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.rival:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="Rival"
+              />
+            </div>
+
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.mega:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="Mega Darts"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.megaXL:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="MegaXL Darts"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={checkboxChange}
+                    value={"ammo.rockets:true"}
+                    className="searchCheckbox"
+                  />
+                }
+                label="Rockets"
+              />
+            </div>
+          </div>
+        </FormGroup>
+
+        <h3 style={{ marginBottom: "0px" }}>Avalibility:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"storeBool:true"}
+                className="searchCheckbox"
+              />
+            }
+            label="Store"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"kitBool:true"}
+                className="searchCheckbox"
+              />
+            }
+            label="Kit"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"filesBool:true"}
+                className="searchCheckbox"
+              />
+            }
+            label="Files"
+          />
+        </FormGroup>
+      </Card>
+
+      <div style={{ width: "100%" }}>
+        <div className="searchHitsHolder">
+          {searchList.map((obj) => (
+            <BlasterDetail blaster={obj.document} key={obj.document.id} />
+          ))}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Pagination count={pages} page={page} onChange={pageChange} />
           </div>
         </div>
-      </InstantSearch>
+      </div>
+      {/* </InstantSearch> */}
     </Card>
   );
 }
 
-function BlasterDetail({ hit }) {
-  const [blasterHero, setBlasterHero] = useState();
-
-  // console.log(hit);
-
-  useEffect(() => {
-    const getData = async () => {
-      const resizedRef = storageRef(
-        storage,
-        `images/${hit.imageArray[0]}_256x144`
-      );
-      getDownloadURL(resizedRef).then((url) => {
-        setBlasterHero(url);
-      });
-    };
-    getData();
-  });
-
-  const blasterURL = "./blaster?blaster=" + hit.objectID + "&queryID=" + hit.__queryID;
-
-  var fpsStr = "";
-  if (hit.fpsLow) {
-    fpsStr += hit.fpsLow;
-  }
-  if (hit.fpsHigh && hit.fpsHigh !== hit.fpsLow) {
-    fpsStr += "-" + hit.fpsHigh;
-  }
-  fpsStr += " FPS";
-
-  return (
-    <Box className="detailGrid">
-      <a href={blasterURL}>
-        <img
-          style={{
-            width: "128px",
-            marginTop: "4px",
-            aspectRatio: "16/9",
-            objectFit: "cover",
-            gridColumn: "image",
-          }}
-          src={blasterHero}
-          alt="Blaster"
-        />
-      </a>
-      <Link href={blasterURL} underline="hover" color="black">
-        <h2
-          style={{
-            marginLeft: "12px",
-            marginBottom: "0px",
-            gridColumn: "name",
-          }}
-        >
-          <Highlight attribute="blasterName" hit={hit} />
-        </h2>
-        <h4
-          style={{
-            marginLeft: "12px",
-            marginTop: "4px",
-            marginBottom: "0px",
-            gridColumn: "name",
-          }}
-        >
-          <Highlight attribute="shortDesc" hit={hit} />
-        </h4>
-      </Link>
-
-      <h3
-        style={{ marginLeft: "12px", gridColumn: "creator", paddingTop: "5px" }}
-      >
-        <Highlight attribute="creator" hit={hit} />
-      </h3>
-
-      <h5
-        style={{
-          marginLeft: "12px",
-          gridColumn: "propulsion",
-          textAlign: "center",
-          paddingTop: "5px",
-        }}
-      >
-        {hit.propulsion}
-      </h5>
-
-      <h5
-        style={{
-          marginLeft: "12px",
-          gridColumn: "fps",
-          textAlign: "center",
-          paddingTop: "5px",
-        }}
-      >
-        {fpsStr}
-      </h5>
-
-      <BlasterLinks hit={hit}></BlasterLinks>
-
-      <div
-        style={{ gridColumn: "actions", display: "flex", alignItems: "center" }}
-      >
-        <BlasterActions blasterData={hit} />
-      </div>
-    </Box>
-  );
-}
-
-function BlasterDetail2({ blaster }) {
+function BlasterDetail({ blaster }) {
   const [blasterHero, setBlasterHero] = useState();
 
   // console.log(hit);
@@ -370,8 +623,6 @@ function BlasterDetail2({ blaster }) {
     getData();
   });
 
-  console.log(blaster);
-
   const blasterURL = "./blaster?blaster=" + blaster.id;
 
   var fpsStr = "";
@@ -384,7 +635,7 @@ function BlasterDetail2({ blaster }) {
   fpsStr += " FPS";
 
   return (
-    <Box className="detailGrid">
+    <Card className="detailGrid">
       <a href={blasterURL}>
         <img
           style={{
@@ -404,8 +655,10 @@ function BlasterDetail2({ blaster }) {
             marginLeft: "12px",
             marginBottom: "0px",
             gridColumn: "name",
+            marginTop: "6px",
           }}
         >
+          {blaster.blasterName}
         </h2>
         <h4
           style={{
@@ -415,12 +668,14 @@ function BlasterDetail2({ blaster }) {
             gridColumn: "name",
           }}
         >
+          {blaster.shortDesc}
         </h4>
       </Link>
 
       <h3
         style={{ marginLeft: "12px", gridColumn: "creator", paddingTop: "5px" }}
       >
+        {blaster.creator}
       </h3>
 
       <h5
@@ -452,6 +707,6 @@ function BlasterDetail2({ blaster }) {
       >
         <BlasterActions blasterData={blaster} />
       </div>
-    </Box>
+    </Card>
   );
 }
