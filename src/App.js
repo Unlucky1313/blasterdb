@@ -4,7 +4,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 import Header from "./Header.js";
-// import Footer from "./Footer.js";
+import Footer from "./Footer.js";
 import BlasterPage from "./BlasterPage.js";
 import Home from "./Home.js";
 import Search from "./Search.js";
@@ -37,7 +37,7 @@ function App() {
         {/* <Route path='/blogs' element={<Blogs/>} />
           <Route path='/sign-up' element={<SignUp/>} /> */}
       </Routes>
-      {/* <Footer /> */}
+      <Footer onChange={gotUser} />
     </Router>
   );
 }

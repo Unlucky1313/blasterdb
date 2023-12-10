@@ -90,7 +90,6 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
           value={blasterData.creator}
         />
 
-
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Release Date"
@@ -190,7 +189,9 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
             </MenuItem>
             <MenuItem value={"3D Printed"}>3D Printed</MenuItem>
             <MenuItem value={"Injection Molded"}>Injection Molded</MenuItem>
+            <MenuItem value={"Nylon"}>Nylon</MenuItem>
             <MenuItem value={"Metal"}>Metal</MenuItem>
+            <MenuItem value={"Other"}>Other</MenuItem>
           </Select>
         </FormControl>
 
@@ -216,6 +217,47 @@ function AddSidebar({ blasterData, onChange, ammoChange, dateChange }) {
             <MenuItem value={"Medium"}>Medium</MenuItem>
             <MenuItem value={"Difficult"}>Difficult</MenuItem>
             <MenuItem value={"Very Difficult"}>Very Difficult</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Position in Hobby */}
+
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Position in the Hobby</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={blasterData.position}
+            label="Position in the Hobby"
+            onChange={dataChange}
+            name="position"
+            sx={{ textAlign: "left" }}
+          >
+            <MenuItem value={"Entry level/Stock"}>Entry level/Stock
+              <Tooltip title="Blasters that shoot around standard Elite velocities, typically aimed at a mass market. Little mod potential." placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
+            <MenuItem value={"Upper-End Stock"}>Upper-End Stock
+              <Tooltip title="Blasters that perform above Elite velocities, but still around 100 fps. Rival, Hyper, Ultra, etc.." placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
+            <MenuItem value={"Modding Platform"}>Modding Platform
+              <Tooltip title="Blasters that may perform like stock blasters, but have been adopted by the community for a variety of major modifications." placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
+            <MenuItem value={"High-End"}>High-End
+              <Tooltip title="Company made blasters that focus on 150+ fps targets." placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
+            <MenuItem value={"Community Developed"}>Community Developed
+              <Tooltip title="Blasters designed and released by community members." placement="right">
+                <HelpOutlineIcon sx={{ marginLeft: "6px" }} />
+              </Tooltip>
+            </MenuItem>
           </Select>
         </FormControl>
 

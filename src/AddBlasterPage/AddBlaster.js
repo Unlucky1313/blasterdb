@@ -57,6 +57,7 @@ export default function AddBlaster(props) {
     fpsLow: 0,
     imageArray: [],
     kit: "",
+    postition: "",
     propulsion: "",
     released: new Date(),
     rof: "",

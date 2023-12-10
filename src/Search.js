@@ -80,7 +80,9 @@ export default function Search(props) {
       diff: [],
       ammo: [],
       avalibility: [],
+      position: ["position:Modding Platform","position:High-End","position:Community Developed"]
     },
+    filter_by: "position:Modding Platform||position:High-End||position:Community Developed",
     page: 1
   });
 
@@ -164,7 +166,6 @@ export default function Search(props) {
 
     // Loop through array of arrays to add each to filters
     Object.keys(filterArray).forEach((key) => {
-      console.log(key, filterArray[key]);
       if (filterArray[key].length !== 0) {
         // Parentheses to begin type of filters
         filterString = filterString + "(";
@@ -192,6 +193,8 @@ export default function Search(props) {
       ...searchParameters,
       ...updatedValue,
     }));
+
+    console.log(searchParameters);
   };
 
   return (
@@ -412,11 +415,31 @@ export default function Search(props) {
             control={
               <Checkbox
                 onChange={checkboxChange}
+                value={"construction:Nylon"}
+                className="searchCheckbox"
+              />
+            }
+            label="Nylon"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
                 value={"construction:Metal"}
                 className="searchCheckbox"
               />
             }
             label="Metal"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"construction:Other"}
+                className="searchCheckbox"
+              />
+            }
+            label="Other"
           />
         </FormGroup>
 
@@ -481,6 +504,65 @@ export default function Search(props) {
               />
             }
             label="Very Difficult"
+          />
+        </FormGroup>
+
+        {/* Position in the Hobby */}
+
+        <h3 style={{ marginBottom: "0px" }}>Position in the Hobby:</h3>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"position:Entry level/Stock"}
+                className="searchCheckbox"
+              />
+            }
+            label="Entry level/Stock"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"position:Upper-End Stock"}
+                className="searchCheckbox"
+              />
+            }
+            label="Upper-End Stock"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"position:Modding Platform"}
+                className="searchCheckbox"
+                defaultChecked 
+              />
+            }
+            label="Modding Platform"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"position:High-End"}
+                className="searchCheckbox"
+                defaultChecked 
+              />
+            }
+            label="High-End"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={checkboxChange}
+                value={"position:Community Developed"}
+                className="searchCheckbox"
+                defaultChecked 
+              />
+            }
+            label="Community Developed"
           />
         </FormGroup>
 

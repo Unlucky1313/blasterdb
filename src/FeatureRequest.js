@@ -47,8 +47,8 @@ export default function FeatureRequest(props) {
 
 
   return (
-    <div className="App">
-      <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "90%", margin: "24px 0px 0px 5%" }}>
+    <div className="App featureContainer">
+      <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "80%", margin: "-50px 5% 0px 5%", padding: "0px 5%", textAlign:"center" }}>
         <h1>BlasterBrowser is always looking to grow and improve!</h1>
         <h3 style={{margin:"2px"}}>If you have an idea for a feature could be added or changed on this website please leave your feedback below!</h3>
         <h3 style={{margin:"2px"}}>I am a 1 man development team, so there is only so much I can build into the site, but new ideas and perspectives are always valuable!</h3>
@@ -57,7 +57,7 @@ export default function FeatureRequest(props) {
           placeholder="Add your Feature Request here!"
           multiline
           maxRows={10}
-          sx={{minWidth: "800px"}}
+          sx={{ width: "100%", maxWidth: "800px"}}
           value={featureText}
           onChange={changeText}
         />

@@ -70,6 +70,7 @@ export default function UpdateBlaster(props) {
     imageArray: [],
     kit: "",
     kitPrice: 0,
+    postition: "",
     propulsion: "",
     released: firebase.firestore.Timestamp.fromDate(new Date()),
     rof: "",

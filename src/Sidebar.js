@@ -73,6 +73,13 @@ export default function Sidebar(props) {
         </ListItem>
         <Divider variant="inset" component="li" />
         <ListItem>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <h5 style={{ margin: "0px 0px 0px 0px", fontWeight: "500" }}>Position in the Hobby:</h5>
+            <h3 style={{ margin: "0px 0px 0px 12px" }}>{props.blasterData.position}</h3>
+          </div>
+        </ListItem>
+        <Divider variant="inset" component="li" />
+        <ListItem>
           <div style={{ display: "flex" }}></div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <h5 style={{ margin: "0px 0px 0px 0px", fontWeight: "500" }}>Min FPS:</h5>

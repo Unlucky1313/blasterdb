@@ -16,6 +16,8 @@ body {
   align-items: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  z-index: 100;
+  position: relative;
 }
 
 .links {
@@ -405,7 +407,7 @@ button {
 
 .title {
   align-self: center;
-  margin: 12px;
+  margin: 10px;
   color: white;
   text-decoration: none;
   font-weight: 600;
@@ -425,6 +427,19 @@ button {
   height: 60px;
   display: flex;
   align-items: center;
+}
+
+.featureContainer{
+  height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+}
+
+.footerContainer {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .navLink {
